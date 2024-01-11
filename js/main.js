@@ -122,14 +122,6 @@ function draw() {
     posX = mouseX;
     posY = (mouseY * 0.9) - (windowHeight * 0.1);
 
-    
-    grainsize_x_mapped = map(mouseX, 0, windowWidth, 0.01, 1.00);
-    grainsize_y_mapped = map(posY, 0, windowHeight, 0.01, 1.00);
-    x_mapped = parseFloat(grainsize_x_mapped.toFixed(2));
-    y_mapped = parseFloat(grainsize_y_mapped.toFixed(2));
-    //console.log("grainsize x mapped " + x_mapped);
-    //console.log("grainsize y mapped " + y_mapped);
-
     clear();
 
     //re-draw border post-grid
@@ -145,8 +137,8 @@ function draw() {
             for (var i = 0; i < dots.length; i++) {
                 dots[i].clicked(mouseX, mouseY, rad, shade);
             }
-            //grans(posX,posY);
-            grans(posX, posY, x_mapped, y_mapped);
+            grains(posX,posY);
+           
         }
 
         stroke(0);
@@ -189,7 +181,7 @@ function rand(min, max) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function grans(pos, pitch, grain_x_mapped, grain_y_mapped) {
+function grains(pos, pitch) {
 
     var grain = ctx.createBufferSource();
     var contour = ctx.createGain();
@@ -242,10 +234,6 @@ function grans(pos, pitch, grain_x_mapped, grain_y_mapped) {
 
     //stop old grains
     grain.stop(ctx.currentTime + playtime);
-    //grain.stop(ctx.currentTime + (grain_x_mapped + grain_y_mapped) + 1);
-
-
-    //grain enveloping and verb
 }
 
 function bufferSwitch(input) {
