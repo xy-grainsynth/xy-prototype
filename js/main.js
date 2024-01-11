@@ -108,7 +108,7 @@ function setup() {
     }
 
     // the interaction cloud
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 70; i++) {
         dots.push(new Circles());
     }
 
