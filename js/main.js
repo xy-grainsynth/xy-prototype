@@ -204,7 +204,7 @@ function grains(pos, pitch) {
 
     //var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
     var gRate = (0.8 - (pitch/windowHeight));
-    console.log("posY "+posY + " - pitch/wh "+ pitch/windowHeight + " - reverse pitch val "+0.8 - (pitch/windowHeight) + " -grate " + gRate);
+    //console.log("posY "+posY + " - pitch/wh "+ pitch/windowHeight + " - reverse pitch val "+0.8 - (pitch/windowHeight) + " -grate " + gRate);
 
     grain.buffer = audioBuffer;
     len = grain.buffer.duration;
@@ -230,7 +230,7 @@ function grains(pos, pitch) {
     // grain start point = buf len * mouse position / x dimension + rand
     //grain.start(ctx.currentTime, (len * factor / position) + rand(0, randFactor));
     grain.start(ctx.currentTime, startPos);
-    console.log("len "+len + " - start  "+ startPos + " - randval " + randval +  " - playtime "+playtime);
+    //console.log("len "+len + " - start  "+ startPos + " - randval " + randval +  " - playtime "+playtime);
 
     //stop old grains
     grain.stop(ctx.currentTime + playtime);
