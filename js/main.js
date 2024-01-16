@@ -203,11 +203,7 @@ function grains(pos, pitch) {
 
     var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
 
-<<<<<<< Updated upstream
-    //var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
-    var gRate = (0.8 - (pitch/windowHeight));
-=======
->>>>>>> Stashed changes
+
     //console.log("posY "+posY + " - pitch/wh "+ pitch/windowHeight + " - reverse pitch val "+0.8 - (pitch/windowHeight) + " -grate " + gRate);
 
     grain.buffer = audioBuffer;
