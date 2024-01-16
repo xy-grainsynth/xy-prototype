@@ -197,13 +197,17 @@ function grains(pos, pitch) {
     contour.connect(verbLevel);
     contour.connect(master);
 
-    verbLevel.gain.setValueAtTime(0.6, ctx.currentTime);
+    //verbLevel.gain.setValueAtTime(0.6, ctx.currentTime);
+    //verbLevel.connect(master);
 
-    verbLevel.connect(master);
 
+    var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
 
+<<<<<<< Updated upstream
     //var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
     var gRate = (0.8 - (pitch/windowHeight));
+=======
+>>>>>>> Stashed changes
     //console.log("posY "+posY + " - pitch/wh "+ pitch/windowHeight + " - reverse pitch val "+0.8 - (pitch/windowHeight) + " -grate " + gRate);
 
     grain.buffer = audioBuffer;
@@ -213,7 +217,7 @@ function grains(pos, pitch) {
     //spread
     randFactor = spread; // smaller randFactor makes larger density, larger randFactor makes density smaller and the sounds more recognizable, its the grain length, spread
 
-    grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
+    //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
 
     
     if (gRate < 1) {
@@ -240,25 +244,18 @@ function bufferSwitch(input) {
     var getSound = new XMLHttpRequest();
     if (input == 0) {
         getSound.open("get", "samples/audio/birdsnearwater.wav", true);
-    } else if (input == 1) {
-        getSound.open("get", "samples/audio/boatpassing.wav", true);
-    } else if (input == 2) {
-        getSound.open("get", "samples/audio/boatpassinghydrophone.wav", true);
     }
-    else if (input == 3) {
+    else if (input == 1) {
         getSound.open("get", "samples/audio/dryleaves.wav", true);
     }
-    else if (input == 4) {
+    else if (input == 2) {
         getSound.open("get", "samples/audio/dryleaveseq.wav", true);
     }
-    else if (input == 5) {
+    else if (input == 3) {
         getSound.open("get", "samples/audio/riverambiencebirds.wav", true);
     }
-    else if (input == 6) {
+    else if (input == 4) {
         getSound.open("get", "samples/audio/riverwater.wav", true);
-    }
-    else if (input == 7) {
-        getSound.open("get", "samples/audio/gespraech.wav", true);
     }
     else {
         //nothing
