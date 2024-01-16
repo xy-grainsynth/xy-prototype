@@ -240,15 +240,12 @@ function bufferSwitch(input) {
         getSound.open("get", "samples/audio/birdsnearwater.wav", true);
     }
     else if (input == 1) {
-        getSound.open("get", "samples/audio/dryleaves.wav", true);
-    }
-    else if (input == 2) {
         getSound.open("get", "samples/audio/dryleaveseq.wav", true);
     }
-    else if (input == 3) {
+    else if (input == 2) {
         getSound.open("get", "samples/audio/riverambiencebirds.wav", true);
     }
-    else if (input == 4) {
+    else if (input == 3) {
         getSound.open("get", "samples/audio/riverwater.wav", true);
     }
     else {
