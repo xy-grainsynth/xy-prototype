@@ -190,7 +190,7 @@ function grains(pos, pitch) {
 
     contour.gain.setValueAtTime(0, ctx.currentTime);
     contour.gain.linearRampToValueAtTime(0.5 * rand(0.2, 1), ctx.currentTime + att); // volume ramp is a bit randomized 
-    contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (att + dec));
+    contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (att + dec) +0.1);
     //contour.gain.linearRampToValueAtTime(0.6 * rand(0.5, 1), ctx.currentTime + grain_x_mapped);
     //contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (grain_x_mapped + grain_y_mapped));
 
@@ -243,9 +243,6 @@ function bufferSwitch(input) {
         getSound.open("get", "samples/audio/dryleaveseq.wav", true);
     }
     else if (input == 2) {
-        getSound.open("get", "samples/audio/riverambiencebirds.wav", true);
-    }
-    else if (input == 3) {
         getSound.open("get", "samples/audio/riverwater.wav", true);
     }
     else {
