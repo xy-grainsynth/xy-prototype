@@ -189,7 +189,7 @@ function grains(pos, pitch) {
     var len, factor, position, randFactor;
 
     contour.gain.setValueAtTime(0, ctx.currentTime);
-    contour.gain.linearRampToValueAtTime(0.6 * rand(0.2, 1), ctx.currentTime + att); // volume ramp is a bit randomized 
+    contour.gain.linearRampToValueAtTime(0.5 * rand(0.2, 1), ctx.currentTime + att); // volume ramp is a bit randomized 
     contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (att + dec));
     //contour.gain.linearRampToValueAtTime(0.6 * rand(0.5, 1), ctx.currentTime + grain_x_mapped);
     //contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (grain_x_mapped + grain_y_mapped));
@@ -231,7 +231,7 @@ function grains(pos, pitch) {
     //console.log("len "+len + " - start  "+ startPos + " - randval " + randval +  " - playtime "+playtime);
 
     //stop old grains
-    grain.stop(ctx.currentTime + playtime);
+    grain.stop(ctx.currentTime + playtime + 0.1);
 }
 
 function bufferSwitch(input) {
