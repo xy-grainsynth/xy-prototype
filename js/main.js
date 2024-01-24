@@ -239,13 +239,13 @@ function grains(pos, pitch) {
 function bufferSwitch(input) {
     var getSound = new XMLHttpRequest();
     if (input == 0) {
-        getSound.open("get", "samples/audio/birdsnearwater.wav", true);
+        getSound.open("get", "samples/audio/riverwater.wav", true);
     }
     else if (input == 1) {
         getSound.open("get", "samples/audio/dryleaveseq.wav", true);
     }
     else if (input == 2) {
-        getSound.open("get", "samples/audio/riverwater.wav", true);
+        getSound.open("get", "samples/audio/birdsnearwater.wav", true);
     }
     else {
         //nothing
