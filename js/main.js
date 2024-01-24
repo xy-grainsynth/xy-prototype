@@ -102,13 +102,12 @@ function setup() {
 
     //visual background on canvas
     for (var i = 0; i < windowWidth*1.2; i++) {
-        print("i "+i);
         bg.push(new Clouds());
         bg[i].seed();
     }
 
     // the interaction cloud
-    for (var i = 0; i < 70; i++) {
+    for (var i = 0; i < 40; i++) {
         dots.push(new Circles());
     }
 
@@ -154,6 +153,7 @@ function draw() {
         */
        frate = rate;
         frameRate(frate);
+      //  console.log(frate);
     }
 }
 
@@ -165,9 +165,11 @@ function windowResized() {
 
 function Circles() {
     this.clicked = function (x, y, startRad, color) {
-        this.x = x + rand(-30, 30);
-        this.y = y + rand(-30, 30);
-        fill(color, color, 255, 40);
+        tx = -30*(spread/2);
+        ty = 30*(spread/2);
+        this.x = x + rand(tx, ty); 
+        this.y = y + rand(tx, ty);
+        fill(color, color, 255, 50);
         ellipse(this.x, this.y, startRad, startRad);
     }
 }
