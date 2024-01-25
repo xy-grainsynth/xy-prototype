@@ -16,6 +16,14 @@ var rate, frate;
 
 var posX, posY;
 
+
+var points = [];
+var centroids = [];
+//var points2 = [];
+//var centroids2 = [];
+
+var buffer;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // "loadbang"
@@ -95,21 +103,82 @@ function preventMotion(event) {
 
 //p5.js setup
 function setup() {
+
     //initalize grain canvas
     gcanvas = createCanvas(windowWidth, windowHeight);
     gcanvas.class("grainCanvas");
     gcanvas.parent("canvasContainer");
+    buffer = createGraphics(width, height);
 
     //visual background on canvas
-    for (var i = 0; i < windowWidth*1.2; i++) {
+    for (var i = 0; i < windowWidth; i++) {
         bg.push(new Clouds());
         bg[i].seed();
+        points.push(new Points());
+        points[i].x = bg[i].x;
+        points[i].y = bg[i].y;
+        //points.push = { x: bg[i].x, y: bg[i].y, cluster: -1 };
+        bg[i].draw();
     }
 
     // the interaction cloud
     for (var i = 0; i < 40; i++) {
         dots.push(new Circles());
     }
+
+
+    for (var i = 0; i < 200; i++) {
+        centroids.push(new Centroids());
+        centroids[i].point.x = random(width);
+        centroids[i].point.y = random(height);
+        //   centroids[i].point.x = random(width);
+        //   centroids[i].point.y = random(height);
+    }
+
+
+    for (var i = 0; i < 7; i++) {
+        kmeans();
+    }
+
+    /*
+    points2.push(new Points2());
+    points2[i].x = centroids[i].point.x;
+    points2[i].y = centroids[i].point.y
+*/
+
+
+    /*
+    for (var i = 0; i < 150; i++) {
+        centroids2.push(new Centroids2());
+        centroids2[i].point.x = random(width);
+        centroids2[i].point.y = random(height);
+        //   centroids[i].point.x = random(width);
+        //   centroids[i].point.y = random(height);
+    }
+    
+*/
+    /*
+    buffer.copy(
+        // source
+        gcanvas,
+        // source x, y, w, h
+        0, 0, windowWidth, windowHeight,
+        // destination x, y, w, h
+        0, 0, buffer.width, buffer.height);
+    
+    console.log(buffer);    buffer.copy(
+        // source
+        gcanvas,
+        // source x, y, w, h
+        0, 0, windowWidth, windowHeight,
+        // destination x, y, w, h
+        0, 0, buffer.width, buffer.height);
+    
+    console.log(buffer);
+    */
+
+
+    //   loadPixels();
 
     ellipseMode(RADIUS);
     noStroke();
@@ -121,6 +190,11 @@ function draw() {
     posX = mouseX;
     posY = (mouseY * 0.9) - (windowHeight * 0.1);
 
+
+
+    loadPixels();
+
+
     clear();
 
     //re-draw border post-grid
@@ -128,17 +202,111 @@ function draw() {
         bg[i].draw();
     }
 
+
+    // draw points
+    for (var i = 0; i < points.length; i++) {
+        points[i].draw();
+    }
+
+
+    // draw centroids
+    for (var i = 0; i < centroids.length; i++) {
+        centroids[i].draw();
+    }
+
+    /*
+
+    // draw centroids
+    for (var i = 0; i < centroids2.length; i++) {
+        points2[i].draw();
+    }
+    */
+
     //limit drawing to within canvas
     if (posX > 0 && posX < windowWidth && posY > windowHeight * 0.0005 && posY < windowHeight) {
         if (mouseIsPressed) {
 
+            var distances = [];
+            for (var i = 0; i < centroids.length; i++) {
+                var centroid = centroids[i];
+                var distance = dist(mouseX, mouseY, centroid.point.x, centroid.point.y);
+               // console.log(" mouse " + mouseX + " " + mouseY + " " + " centroids " + centroid.point.x + " " + centroid.point.y + " distance " + distance);
+                distances[i] = int(distance);
+
+            }
+
+            var closest = sort(distances);
+            //console.log(closest);
+            var sorted_centroids = [];
+
+            //for (var i = 0; i < centroids.length;)
+
+        
+            for (var i = 0; i < distances.length; i++) {
+                var target = distances[i];
+                var targ_centroid = centroids[i];
+                for (var j = i - 1; j >= 0 && (distances[j] > target); j--) {
+                    distances[j + 1] = distances[j];
+                    sorted_centroids[j+1] = sorted_centroids[j];
+                }
+                distances[j + 1] = target
+                sorted_centroids[j+1] = targ_centroid;
+            }
+            console.log(distances);
+            console.log(sorted_centroids);
+
+            for (var i = 0; i < 50; i++) {
+                centroids.draw
+            }
+
+            var ind = (mouseX + (mouseY * windowWidth)) * 4;
+          //  console.log(ind + " " + pixels[ind] + " " + pixels[ind + 1] + " " + pixels[ind + 2]);
+
+            //  loadPixels();
+
+            /*
+            let d = pixelDensity();
+            console.log("pix dens " + d);
+            for (let i = 0; i < d; i += 1) {
+                for (let j = 0; j < d; j += 1) {
+                    let index = 4 * ((mouseY * d + j) * width * d + (mouseX * d + i));
+                    // Red.
+                    console.log("index " + index + " " + "color at " + mouseX + " " + mouseY + " " + pixels[index] + " " + pixels[index + 1] + " " + pixels[index + 2]);
+                    pixels[index] = 0;
+                    // Green.
+                    pixels[index + 1] = 0;
+                    // Blue.
+                    pixels[index + 2] = 0;
+                    // Alpha.
+                    pixels[index + 3] = 255;
+                }
+            }
+            */
+
+
+
+
+            /*
+            for (var i = 0; i < centroids.length; i++) {
+                points2[i].x = centroids[i].point.x;
+                points2[i].y = centroids[i].point.y
+            }
+            */
+            //   kmeansCentroids();
+            /*
             //draw circle when mouse is pressed
             for (var i = 0; i < dots.length; i++) {
                 dots[i].clicked(mouseX, mouseY, rad, shade);
             }
-            grains(posX,posY);
-           
+
+            */
+            grains(posX, posY);
+
         }
+
+        // draw mouse pointer coordinates
+        textSize(10);
+        text(mouseX + ", " + mouseY, 20, 20)
 
         stroke(0);
         strokeWeight(4);
@@ -151,9 +319,8 @@ function draw() {
             frate = rate;
         }
         */
-       frate = rate;
+        frate = rate;
         frameRate(frate);
-      //  console.log(frate);
     }
 }
 
@@ -164,10 +331,12 @@ function windowResized() {
 }
 
 function Circles() {
+    this.x;
+    this.y;
     this.clicked = function (x, y, startRad, color) {
-        tx = -30*(spread/2);
-        ty = 30*(spread/2);
-        this.x = x + rand(tx, ty); 
+        tx = -30 * (spread / 2);
+        ty = 30 * (spread / 2);
+        this.x = x + rand(tx, ty);
         this.y = y + rand(tx, ty);
         fill(color, color, 255, 50);
         ellipse(this.x, this.y, startRad, startRad);
@@ -192,7 +361,7 @@ function grains(pos, pitch) {
 
     contour.gain.setValueAtTime(0, ctx.currentTime);
     contour.gain.linearRampToValueAtTime(0.5 * rand(0.2, 1), ctx.currentTime + att); // volume ramp is a bit randomized 
-    contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (att + dec) +0.1);
+    contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (att + dec) + 0.1);
     //contour.gain.linearRampToValueAtTime(0.6 * rand(0.5, 1), ctx.currentTime + grain_x_mapped);
     //contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (grain_x_mapped + grain_y_mapped));
 
@@ -215,13 +384,13 @@ function grains(pos, pitch) {
 
     //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
 
-    
+
     if (gRate < 1) {
         grain.playbackRate.value = 0.5;
     } else {
         grain.playbackRate.value = gRate;
     }
-   
+
     grain.connect(contour);
 
     playtime = att + dec;
@@ -271,7 +440,7 @@ function Clouds() {
 
     this.draw = function () {
         noStroke();
-        fill(180, 30)
+        fill(50, 10)
         ellipse(this.x, this.y, 50, 50);
     }
 }
@@ -283,3 +452,174 @@ function randomX() {
 function randomY() {
     return Math.random() * windowHeight;
 }
+
+
+
+function Centroids({a,b,c}) {
+    this.color = { r : a, g: b, b: c };
+    this.point = { x: 0, y: 0 };
+
+    this.draw = function () {
+        noStroke();
+        fill(this.color.r, this.color.g, this.color.b)
+        ellipse(this.point.x, this.point.y, 10, 10);
+    }
+}
+
+
+
+function Centroids() {
+    this.color = { r: 250, g: 250, b: 250 };
+    this.point = { x: 0, y: 0 };
+
+    this.draw = function () {
+        noStroke();
+        fill(this.color.r, this.color.g, this.color.b)
+        ellipse(this.point.x, this.point.y, 10, 10);
+    }
+}
+
+
+function Points() {
+    this.x = 0;
+    this.y = 0;
+    this.cluster = -1;
+
+    this.draw = function () {
+        noStroke();
+        if (this.cluster == -1) {
+            fill(255)
+        } else {
+            var centroid1 = centroids[this.cluster];
+            fill(centroid1.color.r, centroid1.color.g, centroid1.color.b)
+        }
+        ellipse(this.x, this.y, 3, 3);
+    }
+}
+
+
+
+
+
+/*
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+##############################################################################
+*/
+
+
+
+
+function kmeans() {
+    // assign points to clusters
+    for (var i = 0; i < points.length; i++) {
+        var point = points[i];
+        var distances = []
+        var minDistance = 0;
+        for (var j = 0; j < centroids.length; j++) {
+            var centroid = centroids[j];
+            var newDistance = dist(point.x, point.y, centroid.point.x, centroid.point.y);
+            if (minDistance == 0 || newDistance < minDistance) {
+                minDistance = newDistance
+                point.cluster = j
+            }
+        }
+    }
+
+    // move centroids to the centers of all clustered points
+    for (var i = 0; i < centroids.length; i++) {
+        var centroid = centroids[i];
+        var myPoints = points.filter(function (point) {
+            return point.cluster == i;
+        })
+        var newX = myPoints.map(function (point) {
+            return point.x
+        })
+        centroid.point.x = getMean(newX)
+
+        var newY = myPoints.map(function (point) {
+            return point.y
+        })
+        centroid.point.y = getMean(newY)
+    }
+}
+
+function getMean(values) {
+    return round(values.reduce(function (sum, value) { return sum + value }, 0) / values.length)
+}
+
+
+
+
+/*
+
+function Centroids2() {
+    this.color = { r: 200, g: 200, b: 200 };
+    this.point = { x: 0, y: 0 };
+
+    this.draw = function () {
+        noStroke();
+        fill(this.color.r, this.color.g, this.color.b)
+        ellipse(this.point.x, this.point.y, 10, 10);
+    }
+}
+
+
+
+function Points2() {
+    this.x = 0;
+    this.y = 0;
+    this.cluster = -1;
+
+    this.draw = function () {
+        noStroke();
+        if (this.cluster == -1) {
+            fill(255)
+        } else {
+            var centroid2 = centroids2[this.cluster];
+            fill(centroid2.color.r, centroid2.color.g, centroid2.color.b)
+        }
+        ellipse(this.x, this.y, 3, 3);
+    }
+}
+
+function kmeansCentroids() {
+    // assign points to clusters
+    for (var i = 0; i < points2.length; i++) {
+        var point = points2[i];
+        var distances = []
+        var minDistance = 0;
+        for (var j = 0; j < centroids2.length; j++) {
+            var centroid = centroids2[j];
+            var newDistance = dist(point.x, point.y, centroid.point.x, centroid.point.y);
+            if (minDistance == 0 || newDistance < minDistance) {
+                minDistance = newDistance
+                point.cluster = j
+            }
+        }
+    }
+
+    // move centroids to the centers of all clustered points
+    for (var i = 0; i < centroids2.length; i++) {
+        var centroid = centroids2[i];
+        var myPoints = centroids.filter(function (centr) {
+            return centr.cluster == i;
+        })
+        var newX = myPoints.map(function (point) {
+            return point.x
+        })
+        centroid.point.x = getMean(newX)
+
+        var newY = myPoints.map(function (point) {
+            return point.y
+        })
+        centroid.point.y = getMean(newY)
+    }
+}
+*/
+
+
+
