@@ -127,7 +127,7 @@ function setup() {
     }
 
 
-    for (var i = 0; i < 220; i++) {
+    for (var i = 0; i < 130; i++) {
         centroids.push(new Centroids());
         centroids[i].point.x = random(width);
         centroids[i].point.y = random(height);
@@ -136,7 +136,7 @@ function setup() {
     }
 
 
-    for (var i = 0; i < 7; i++) {
+    for (var i = 0; i < 5; i++) {
         kmeans();
     }
 
@@ -252,8 +252,8 @@ function draw() {
                 distances[j + 1] = target
                 sorted_centroids[j+1] = targ_centroid;
             }
-            console.log(distances);
-            console.log(sorted_centroids);
+            console.log("distances "+distances);
+            console.log("sorted centroids "+sorted_centroids);
 
             for (var i = 0; i < 50; i++) {
                 centroids.draw
