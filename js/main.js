@@ -127,7 +127,7 @@ function setup() {
     }
 
 
-    for (var i = 0; i < 200; i++) {
+    for (var i = 0; i < 220; i++) {
         centroids.push(new Centroids());
         centroids[i].point.x = random(width);
         centroids[i].point.y = random(height);
