@@ -252,8 +252,8 @@ function draw() {
                 distances[j + 1] = target
                 sorted_centroids[j+1] = targ_centroid;
             }
-            console.log("distances "+distances);
-            console.log("sorted centroids "+sorted_centroids);
+           // console.log("distances "+distances);
+           // console.log("sorted centroids "+sorted_centroids);
 
             for (var i = 0; i < 50; i++) {
                 centroids.draw
