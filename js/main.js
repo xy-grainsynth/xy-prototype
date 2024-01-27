@@ -12,7 +12,7 @@ var spread;
 
 var ctx, master, cVerb, irBuff
 
-var rate = 30.00;
+var rate;
 var frate;
 
 var posX, posY;
@@ -73,8 +73,8 @@ window.onload = function () {
     setInterval(function () {
         sliderSpr = document.getElementById("spread").value;
         spread = parseFloat(sliderSpr);
-    //    sliderRate = document.getElementById("density").value;
-    //    rate = parseFloat(sliderRate);
+       sliderRate = document.getElementById("density").value;
+        rate = parseFloat(sliderRate);
         sliderAtt = document.getElementById("attack").value;
         att = parseFloat(sliderAtt);
         sliderDec = document.getElementById("decay").value;
