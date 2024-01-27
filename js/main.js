@@ -355,13 +355,13 @@ function draw() {
             frate = rand(7, 10);
         }
         else if (pixels[index] == 181) {
-            frate = rand(15, 20);
+            frate = rand(7, 10);
         }
         else if (pixels[index] == 180) {
-            frate = rand(20, 30);
+            frate = rand(10, 20);
         }
         else if (pixels[index] == 179) {
-            frate = rand(30,50);
+            frate = rand(20,50);
         }
         else if (pixels[index] == 178) {
             frate = rand(10,20);
