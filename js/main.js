@@ -70,6 +70,8 @@ window.onload = function () {
     });
 
     //call slider values
+      //     sliderRate = document.getElementById("density").value;
+  //      rate = parseFloat(sliderRate);
     setInterval(function () {
         sliderSpr = document.getElementById("spread").value;
         spread = parseFloat(sliderSpr);
