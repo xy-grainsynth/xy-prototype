@@ -12,7 +12,8 @@ var spread;
 
 var ctx, master, cVerb, irBuff
 
-var rate, frate;
+var rate = 20;
+var frate;
 
 var posX, posY;
 
@@ -72,8 +73,8 @@ window.onload = function () {
     setInterval(function () {
         sliderSpr = document.getElementById("spread").value;
         spread = parseFloat(sliderSpr);
-        sliderRate = document.getElementById("density").value;
-        rate = parseFloat(sliderRate);
+    //    sliderRate = document.getElementById("density").value;
+    //    rate = parseFloat(sliderRate);
         sliderAtt = document.getElementById("attack").value;
         att = parseFloat(sliderAtt);
         sliderDec = document.getElementById("decay").value;
@@ -360,13 +361,13 @@ function draw() {
             frate = rand(20, 30);
         }
         else if (pixels[index] == 179) {
-            frate = rand(30,55);
+            frate = rand(30,50);
         }
         else if (pixels[index] == 178) {
             frate = rand(10,20);
         }
         else if (pixels[index] == 177) {
-            frate = rand(55, 80);
+            frate = rand(50, 80);
         }
         else if (pixels[index] == 176) {
             frate = rand(80, 100);
