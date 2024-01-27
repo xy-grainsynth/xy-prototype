@@ -312,13 +312,14 @@ function draw() {
             }
             */
             //   kmeansCentroids();
+            
             /*
             //draw circle when mouse is pressed
             for (var i = 0; i < dots.length; i++) {
                 dots[i].clicked(mouseX, mouseY, rad, shade);
             }
-
-            */
+*/
+            
             grains(posX, posY);
 
         }
@@ -388,8 +389,8 @@ function Circles() {
     this.clicked = function (x, y, startRad, color) {
         tx = -30 * (spread / 2);
         ty = 30 * (spread / 2);
-        this.x = x + rand(tx, ty);
-        this.y = y + rand(tx, ty);
+        this.x = x+ rand(tx, ty);
+        this.y = y+ rand(tx, ty);
         fill(color, color, 255, 50);
         ellipse(this.x, this.y, startRad, startRad);
     }
