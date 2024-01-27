@@ -70,13 +70,13 @@ window.onload = function () {
     });
 
     //call slider values
-      //     sliderRate = document.getElementById("density").value;
-  //      rate = parseFloat(sliderRate);
+    //     sliderRate = document.getElementById("density").value;
+    //      rate = parseFloat(sliderRate);
     setInterval(function () {
         sliderSpr = document.getElementById("spread").value;
         spread = parseFloat(sliderSpr);
-    //   sliderRate = document.getElementById("density").value;
-    //    rate = parseFloat(sliderRate);
+        //   sliderRate = document.getElementById("density").value;
+        //    rate = parseFloat(sliderRate);
         sliderAtt = document.getElementById("attack").value;
         att = parseFloat(sliderAtt);
         sliderDec = document.getElementById("decay").value;
@@ -145,6 +145,8 @@ function setup() {
         kmeans();
     }
 
+
+
     /*
     points2.push(new Points2());
     points2[i].x = centroids[i].point.x;
@@ -212,15 +214,15 @@ function draw() {
         points[i].draw();
     }
 
-/*
-
-    // draw centroids
-    for (var i = 0; i < centroids.length; i++) {
-        centroids[i].draw();
-    }
-
-
-*/
+    /*
+    
+        // draw centroids
+        for (var i = 0; i < centroids.length; i++) {
+            centroids[i].draw();
+        }
+    
+    
+    */
 
 
     /*
@@ -235,16 +237,44 @@ function draw() {
     if (posX > 0 && posX < windowWidth && posY > windowHeight * 0.0005 && posY < windowHeight) {
         if (mouseIsPressed) {
 
+            var map = {};
             var distances = [];
+            var centroids_valid = [];
             for (var i = 0; i < centroids.length; i++) {
                 var centroid = centroids[i];
                 var distance = dist(mouseX, mouseY, centroid.point.x, centroid.point.y);
                 // console.log(" mouse " + mouseX + " " + mouseY + " " + " centroids " + centroid.point.x + " " + centroid.point.y + " distance " + distance);
-                distances[i] = int(distance);
+                if (int(distance)) {
+                    distances[i] = int(distance);
+                    centroids_valid[centroid];
+
+                    //     const sym = Symbol(distances[i]);
+                    //         console.log("distance "+distance + " " +sym.toString());
+                    map[int(distance)] = centroid;
+                }
 
             }
 
+
+
+
+            var sorted_map = {};
+
+
             var closest = sort(distances);
+            /*
+            for (i = 0; i < closest.length; i++) {
+                console.log(closest[i] + " " + map[closest[i]]);
+            }
+*/
+
+            for (var i = 0; i < 10; i++) {
+                map[closest[i]].draw();
+
+            }
+
+
+            /*
             //console.log(closest);
             var sorted_centroids = [];
 
@@ -254,20 +284,18 @@ function draw() {
             for (var i = 0; i < distances.length; i++) {
                 var target = distances[i];
                 var targ_centroid = centroids[i];
+          //      console.log("i "+ i + " target "+target);
+         //       console.log("target centroid x y "+targ_centroid.point.x+" "+targ_centroid.point.y) 
                 for (var j = i - 1; j >= 0 && (distances[j] > target); j--) {
+               //     console.log(distances[j]);
                     distances[j + 1] = distances[j];
                     sorted_centroids[j + 1] = sorted_centroids[j];
                 }
                 distances[j + 1] = target
                 sorted_centroids[j + 1] = targ_centroid;
             }
-            //  console.log("distances "+distances);
-            //  console.log("sorted centroids "+sorted_centroids);
 
-            for (var i = 0; i < 50; i++) {
-                centroids.draw
-            }
-
+*/
 
 
 
@@ -315,14 +343,14 @@ function draw() {
             }
             */
             //   kmeansCentroids();
-            
+
             /*
             //draw circle when mouse is pressed
             for (var i = 0; i < dots.length; i++) {
                 dots[i].clicked(mouseX, mouseY, rad, shade);
             }
 */
-            
+
             grains(posX, posY);
 
         }
@@ -346,10 +374,11 @@ function draw() {
 
 
         var index = (mouseX + (mouseY * windowWidth)) * 4;
-        console.log(index + " " + pixels[index] + " " + pixels[index + 1] + " " + pixels[index + 2]);
+        //   console.log(index + " " + pixels[index] + " " + pixels[index + 1] + " " + pixels[index + 2]);
 
 
 
+        // cloud circles setting - rgb value 180, opacity value 30
         if (pixels[index] == 0) {
             frate = rand(1, 7);
         }
@@ -363,10 +392,10 @@ function draw() {
             frate = rand(10, 15);
         }
         else if (pixels[index] == 179) {
-            frate = rand(25,35);
+            frate = rand(25, 35);
         }
         else if (pixels[index] == 178) {
-            frate = rand(15,25);
+            frate = rand(15, 25);
         }
         else if (pixels[index] == 177) {
             frate = rand(30, 80);
@@ -374,8 +403,8 @@ function draw() {
         else if (pixels[index] == 176) {
             frate = rand(80, 100);
         }
-        else frate = rand(90,100);
-        console.log("pixel r val " + pixels[index] + " " + " frame rate " + frate);
+        else frate = rand(90, 100);
+        //    console.log("pixel r val " + pixels[index] + " " + " frame rate " + frate);
         frameRate(frate);
     }
 }
@@ -392,8 +421,8 @@ function Circles() {
     this.clicked = function (x, y, startRad, color) {
         tx = -30 * (spread / 2);
         ty = 30 * (spread / 2);
-        this.x = x+ rand(tx, ty);
-        this.y = y+ rand(tx, ty);
+        this.x = x + rand(tx, ty);
+        this.y = y + rand(tx, ty);
         fill(color, color, 255, 50);
         ellipse(this.x, this.y, startRad, startRad);
     }
