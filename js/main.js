@@ -24,6 +24,8 @@ var centroids = [];
 
 var buffer;
 
+var pixel_r_val;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // "loadbang"
@@ -111,7 +113,7 @@ function setup() {
     buffer = createGraphics(width, height);
 
     //visual background on canvas
-    for (var i = 0; i < windowWidth; i++) {
+    for (var i = 0; i < width; i++) {
         bg.push(new Clouds());
         bg[i].seed();
         points.push(new Points());
@@ -127,10 +129,10 @@ function setup() {
     }
 
 
-    for (var i = 0; i < 130; i++) {
+    for (var i = 0; i < 220; i++) {
         centroids.push(new Centroids());
-        centroids[i].point.x = random(width);
-        centroids[i].point.y = random(height);
+        centroids[i].point.x = random(windowWidth);
+        centroids[i].point.y = random(windowHeight);
         //   centroids[i].point.x = random(width);
         //   centroids[i].point.y = random(height);
     }
@@ -191,7 +193,6 @@ function draw() {
     posY = (mouseY * 0.9) - (windowHeight * 0.1);
 
 
-
     loadPixels();
 
 
@@ -208,11 +209,16 @@ function draw() {
         points[i].draw();
     }
 
+/*
 
     // draw centroids
     for (var i = 0; i < centroids.length; i++) {
         centroids[i].draw();
     }
+
+
+*/
+
 
     /*
 
@@ -230,7 +236,7 @@ function draw() {
             for (var i = 0; i < centroids.length; i++) {
                 var centroid = centroids[i];
                 var distance = dist(mouseX, mouseY, centroid.point.x, centroid.point.y);
-               // console.log(" mouse " + mouseX + " " + mouseY + " " + " centroids " + centroid.point.x + " " + centroid.point.y + " distance " + distance);
+                // console.log(" mouse " + mouseX + " " + mouseY + " " + " centroids " + centroid.point.x + " " + centroid.point.y + " distance " + distance);
                 distances[i] = int(distance);
 
             }
@@ -241,26 +247,39 @@ function draw() {
 
             //for (var i = 0; i < centroids.length;)
 
-        
+
             for (var i = 0; i < distances.length; i++) {
                 var target = distances[i];
                 var targ_centroid = centroids[i];
                 for (var j = i - 1; j >= 0 && (distances[j] > target); j--) {
                     distances[j + 1] = distances[j];
-                    sorted_centroids[j+1] = sorted_centroids[j];
+                    sorted_centroids[j + 1] = sorted_centroids[j];
                 }
                 distances[j + 1] = target
-                sorted_centroids[j+1] = targ_centroid;
+                sorted_centroids[j + 1] = targ_centroid;
             }
-           // console.log("distances "+distances);
-           // console.log("sorted centroids "+sorted_centroids);
+            //  console.log("distances "+distances);
+            //  console.log("sorted centroids "+sorted_centroids);
 
             for (var i = 0; i < 50; i++) {
                 centroids.draw
             }
 
-            var ind = (mouseX + (mouseY * windowWidth)) * 4;
-          //  console.log(ind + " " + pixels[ind] + " " + pixels[ind + 1] + " " + pixels[ind + 2]);
+
+
+
+            /*
+            //  Red.
+            pixels[index] = 0;
+            // Green.
+            pixels[index + 1] = 0;
+            // Blue.
+            pixels[index + 2] = 0;
+            // Alpha.
+            pixels[index + 3] = 255;
+*/
+
+            //  updatePixels();
 
             //  loadPixels();
 
@@ -305,8 +324,8 @@ function draw() {
         }
 
         // draw mouse pointer coordinates
-        textSize(10);
-        text(mouseX + ", " + mouseY, 20, 20)
+        //   textSize(10);
+        //   text(mouseX + ", " + mouseY, 20, 20)
 
         stroke(0);
         strokeWeight(4);
@@ -319,7 +338,40 @@ function draw() {
             frate = rate;
         }
         */
-        frate = rate;
+        //    frate = posX;
+
+
+        var index = (mouseX + (mouseY * windowWidth)) * 4;
+        console.log(index + " " + pixels[index] + " " + pixels[index + 1] + " " + pixels[index + 2]);
+
+
+
+        if (pixels[index] == 0) {
+            frate = rand(1, 7);
+        }
+        else if (pixels[index] == 182) {
+            frate = rand(7, 10);
+        }
+        else if (pixels[index] == 181) {
+            frate = rand(15, 20);
+        }
+        else if (pixels[index] == 180) {
+            frate = rand(20, 30);
+        }
+        else if (pixels[index] == 179) {
+            frate = rand(30,55);
+        }
+        else if (pixels[index] == 178) {
+            frate = rand(10,20);
+        }
+        else if (pixels[index] == 177) {
+            frate = rand(55, 80);
+        }
+        else if (pixels[index] == 176) {
+            frate = rand(80, 100);
+        }
+        else frate = rand(90,100);
+        console.log("pixel r val " + pixels[index] + " " + " frame rate " + frate);
         frameRate(frate);
     }
 }
@@ -440,7 +492,7 @@ function Clouds() {
 
     this.draw = function () {
         noStroke();
-        fill(50, 10)
+        fill(180, 30)
         ellipse(this.x, this.y, 50, 50);
     }
 }
@@ -455,8 +507,8 @@ function randomY() {
 
 
 
-function Centroids({a,b,c}) {
-    this.color = { r : a, g: b, b: c };
+function Centroids({ a, b, c }) {
+    this.color = { r: a, g: b, b: c };
     this.point = { x: 0, y: 0 };
 
     this.draw = function () {
@@ -549,6 +601,38 @@ function kmeans() {
 
 function getMean(values) {
     return round(values.reduce(function (sum, value) { return sum + value }, 0) / values.length)
+}
+
+
+/*
+*
+* https://dev.to/nielsenjared/how-to-code-the-array-partition-algorithm-in-javascript-and-python-1m0n
+*
+*/
+
+
+const swap = (arr, left, right) => {
+    let temp = arr[left];
+    arr[left] = arr[right];
+    arr[right] = temp;
+
+    return arr;
+}
+
+const partition = (arr, left = 0, right = arr.length - 1) => {
+
+    let index = left;
+    let pivot = arr[right];
+
+    for (let i = left; i < right; i++) {
+        if (arr[i] < pivot) {
+            swap(arr, index, i);
+            index++;
+        }
+    }
+    swap(arr, index, right);
+
+    return index;
 }
 
 
