@@ -363,10 +363,10 @@ function draw() {
             frate = rand(10, 15);
         }
         else if (pixels[index] == 179) {
-            frate = rand(15,25);
+            frate = rand(25,35);
         }
         else if (pixels[index] == 178) {
-            frate = rand(25,30);
+            frate = rand(15,25);
         }
         else if (pixels[index] == 177) {
             frate = rand(30, 80);
