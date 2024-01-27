@@ -12,7 +12,7 @@ var spread;
 
 var ctx, master, cVerb, irBuff
 
-var rate = 20;
+var rate = 30.00;
 var frate;
 
 var posX, posY;
