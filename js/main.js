@@ -447,13 +447,13 @@ function draw() {
     */
 
     
-    
+    /*
          // draw centroids
          for (var i = 0; i < centroids.length; i++) {
              centroids[i].draw();
          }
      
-
+*/
 
     /*
 var cluster = area_map[0];
@@ -513,16 +513,20 @@ area.draw();
             for (var i = 0; i < 7; i++) {
                 var cur_cl = map[closest[i]];
                 //  console.log(cur_cl);
+                /*
                 var r =  cur_cl.color.r;
                 var g =  cur_cl.color.g;
                 var b =  cur_cl.color.b;
                 cur_cl.color.r = 0;
                 cur_cl.color.g = 0;
                 cur_cl.color.b = 0;
+                */
                 cur_cl.draw();
+                /*
                 cur_cl.color.r = r;
                 cur_cl.color.g = g;
                 cur_cl.color.b = b;
+                */
                 keys.push(cur_cl.cluster);
                 //     console.log(cur_cl.cluster);
                 //   if(cur_cl.cluster in clus_map){
