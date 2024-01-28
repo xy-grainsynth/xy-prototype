@@ -27,6 +27,9 @@ var buffer;
 
 var pixel_r_val;
 
+var area_map = {};
+var num_cluster = 0;
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // "loadbang"
@@ -132,12 +135,28 @@ function setup() {
     }
 
 
-    for (var i = 0; i < 220; i++) {
+    var map_x = {};
+    var map_y = {};
+
+    var x = [];
+    var y = [];
+
+    var num_centroids = 220;
+
+    for (var i = 0; i < num_centroids; i++) {
         centroids.push(new Centroids());
-        centroids[i].point.x = random(windowWidth);
-        centroids[i].point.y = random(windowHeight);
-        //   centroids[i].point.x = random(width);
-        //   centroids[i].point.y = random(height);
+
+        centroids[i].point.x = random(width);
+        centroids[i].point.y = random(height);
+
+        //     map_x[centroids[i].point.x] = centroids[i];
+
+        //    if (centroids[i].point.x in map_x){ 
+        //     console.log(centroids[i].point.x);
+        //     console.log(map_x[centroids[i].point.x])};
+        //     map_y[centroids[i].point.y] = centroids[i];
+        x.push(centroids[i].point.x);
+        y.push(centroids[i].point.y);
     }
 
 
@@ -146,6 +165,201 @@ function setup() {
     }
 
 
+
+    var new_centroids = centroids;
+    for (var i = 0; i < new_centroids.length - 1; i++) {
+        console.log("arr length " + new_centroids.length);
+        var centroid_a = new_centroids[i];
+        console.log(i);
+        //    console.log(centroid_a);
+
+        //cluster every 10 centroids into a polygon
+        var map = {};
+        var distances = [];
+
+        for (var j = 1; j < new_centroids.length; j++) {
+            //      console.log("j " + j);
+            var centroid_b = new_centroids[j];
+            var distance = dist(centroid_a.point.x, centroid_a.point.y, centroid_b.point.x, centroid_b.point.y);
+            if (int(distance)) {
+                distances.push(int(distance));
+                map[int(distance)] = centroid_b;
+            }
+
+        }
+
+        //     console.log(distances);
+
+        var closest = sort(distances);
+
+        var area_cluster = [];
+
+        console.log("closest " + closest.length);
+        console.log(closest);
+
+
+
+
+        //    if (closest.length) {
+        new_centroids = [];
+        console.log("new cetnroids length " + new_centroids.length);
+
+        var red = rand(0, 255);
+        var green = rand(0, 255);
+        var blue = rand(0, 255);
+        for (var k = 0; k < closest.length; k++) {
+
+            if (closest[k] < 200) {
+
+
+                var clus = map[closest[k]];
+                clus.color.r = red;
+                clus.color.g = green;
+                clus.color.b = blue;
+                area_cluster.push(clus);
+                //        closest.shift();
+
+                centroid_a.color.r = red;
+                centroid_a.color.g = green;
+                centroid_a.color.b = blue;
+                area_cluster.push(centroid_a);
+                console.log("num cluser " + num_cluster);
+                console.log(area_cluster);
+                area_map[num_cluster] = area_cluster;
+                num_cluster++;
+                //           console.log(area_cluster);
+            } else {
+                //  for (k = 10; k < closest.length; k++) {
+                new_centroids.push(map[closest[k]]);
+            }
+        }
+        //       } else {//remaining centroids
+        //           console.log(closest.length);
+        //       }
+    }
+
+    /*
+        for(var r = 0; r < num_cluster ; r++){
+            var cl = area_map[r];
+            console.log("cluster "+r);
+            for (var g = 0 ; g < cl.length; g++){
+                console.log(cl[g]);
+            }
+        }
+    */
+
+
+    /*
+}
+}
+/*
+var x_sorted = sort(x);
+var y_sorted = sort(y);
+
+var area_map = {};
+//    var distances = [];
+var y_new = y_sorted;
+
+console.log("x sorted "+ x_sorted);
+
+console.log("y sorted "+ y_sorted);
+
+while (x_sorted.length > 0) {
+console.log(" in while ");
+for (var i = 0; i < x_sorted.length; i++) {
+    console.log("map_x"+map_x);
+    console.log("x " + x_sorted[i]);
+    var centroid_a = map_x[x_sorted[i]];
+    console.log(centroid_a);
+    var map_dist = {};
+    var dists = [];
+
+    
+    for (j = 0; j < y_sorted.length; j++) {
+        
+        console.log("y " + y_sorted[j] );
+        var centroid_b = map_y[y_sorted[j]];
+        console.log(centroid_b);
+        var distance = int(dist(centroid_a.point.x, centroid_b.point.y, centroid_b.point.x, centroid_b.point.y));
+      
+        if (distance) {
+            dists.push(distance);
+  //          console.log("dist "+distance);
+            //centroids_valid[centroid];
+            map_dist[distance] = centroid_b;
+        }
+       // console.log(map_dist);
+    }
+    var closest_b = sort(dists);
+
+    //console.log("closest "+closest_b.length);
+
+
+    var area_cluster = [];
+
+    var r = rand(0, 255);
+    var g = rand(0, 255);
+    var b = rand(0, 255);
+    console.log(r + " " + g + " " + b);
+    centroid_a.color.r = r;
+    centroid_a.color.g = g;
+    centroid_a.color.b = b;
+    area_cluster.push(centroid_a);
+
+    if (closest_b.length > 0) {
+        console.log("closest _b ist non zero");
+        for (var k = 0; k < 10; k++) {
+            console.log("dist "+k+ " " + closest_b[k]);
+            var close_centroid = map_dist[closest_b[k]];
+            console.log(close_centroid);
+            close_centroid.color.r = r;
+            close_centroid.color.g = g;
+            close_centroid.color.b = b;
+            area_cluster.push(close_centroid);
+
+            closest_b.shift();
+        }
+        var y_new = [];
+        for (var k = 10; k < closest_b.length; k++) {
+            console.log("dist "+ closest_b[k]);
+            var centr = map_dist[closest_b[k]];
+             console.log("centr "+centr.point.y);
+            y_new.push(map_dist[closest_b[k]].point.y);
+        }
+        y_sorted = sort(y_new);
+
+
+
+        console.log (" new y sorted "+ y_sorted);
+        
+        map_y_new = {};
+        map_x_new = {};
+        var x_new = [];
+        
+        for(var l=0; l < y_sorted.length;l++){
+            console.log(y_sorted[l]);
+            var centroid = map_y[y_sorted[l]];
+            map_y_new[y_sorted[l]] = centroid;
+            map_x_new[centroid.point.x] = centroid; 
+            x_new.push(centroid.point.x);
+        }
+        map_x = map_x_new;
+        map_y = map_y_new;
+        x_sorted = sort(x_new);
+        
+
+    }
+
+    console.log(area_cluster);
+
+    area_map[x_sorted[i]] = area_cluster;
+
+
+ 
+}
+}
+
+*/
 
     /*
     points2.push(new Points2());
@@ -208,25 +422,32 @@ function draw() {
         bg[i].draw();
     }
 
-
-    // draw points
-    for (var i = 0; i < points.length; i++) {
-        points[i].draw();
-    }
-
-    /*
     
-        // draw centroids
-        for (var i = 0; i < centroids.length; i++) {
-            centroids[i].draw();
+        // draw points
+        for (var i = 0; i < points.length; i++) {
+            points[i].draw();
         }
     
     
-    */
+        
+        
+             // draw centroids
+             for (var i = 0; i < centroids.length; i++) {
+                 centroids[i].draw();
+             }
+         
+    
 
+             /*
+    var cluster = area_map[0];
+    console.log(cluster);
+    var area = new Area();
+    area.ar = cluster;
+    area.draw();
+*/
 
     /*
-
+ 
     // draw centroids
     for (var i = 0; i < centroids2.length; i++) {
         points2[i].draw();
@@ -277,10 +498,10 @@ function draw() {
             /*
             //console.log(closest);
             var sorted_centroids = [];
-
+ 
             //for (var i = 0; i < centroids.length;)
-
-
+ 
+ 
             for (var i = 0; i < distances.length; i++) {
                 var target = distances[i];
                 var targ_centroid = centroids[i];
@@ -294,7 +515,7 @@ function draw() {
                 distances[j + 1] = target
                 sorted_centroids[j + 1] = targ_centroid;
             }
-
+ 
 */
 
 
@@ -539,8 +760,27 @@ function randomY() {
 }
 
 
+function Area() {
+    console.log("in area ");
+    this.ar = [];
+    this.draw = function () {
+        noStroke();
+        noFill();
+        
+        beginShape();
+        curveVertex(this.ar[0].point.x, this.ar[0].point.y);
+        for (var i = 1; i < this.ar.length - 2; i++) {
+            curveVertex(this.ar[i].point.x, this.ar[i + 1].point.y);
+        }
+        curveVertex(this.ar[this.ar.length - 1].point.x, this.ar[this.ar.length - 1].point.y);
+        endShape();
+    }
 
-function Centroids({ a, b, c }) {
+}
+
+
+
+function Centroids(a, b, c) {
     this.color = { r: a, g: b, b: c };
     this.point = { x: 0, y: 0 };
 
