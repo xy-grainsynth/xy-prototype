@@ -31,6 +31,13 @@ var area_map = {};
 var num_cluster = 0;
 var clus_colors = [];
 
+
+var pol;
+
+
+var xlist = [];
+var ylist = [];
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // "loadbang"
@@ -95,9 +102,9 @@ window.onload = function () {
     document.getElementById('shuffleButton').addEventListener('click', function () {
         console.log("calling rshuffle");
         reshuffle();
-      });
-      
-      
+    });
+
+
 }
 
 //https://stackoverflow.com/questions/10592411/disable-scrolling-in-all-mobile-devices
@@ -124,15 +131,17 @@ function setup() {
     gcanvas = createCanvas(windowWidth, windowHeight);
     gcanvas.class("grainCanvas");
     gcanvas.parent("canvasContainer");
-    buffer = createGraphics(width, height);
+  //  buffer = createGraphics(width, height);
 
     //visual background on canvas
-    for (var i = 0; i < width; i++) {
+    for (var i = 0; i < windowWidth; i++) {
         bg.push(new Clouds());
         bg[i].seed();
         points.push(new Points());
         points[i].x = bg[i].x;
         points[i].y = bg[i].y;
+        xlist.push(bg[i].x);
+        ylist.push(bg[i].y);
         //points.push = { x: bg[i].x, y: bg[i].y, cluster: -1 };
         bg[i].draw();
     }
@@ -143,11 +152,11 @@ function setup() {
     }
 
 
-    var map_x = {};
-    var map_y = {};
+    //    var map_x = {};
+    //    var map_y = {};
 
-    var x = [];
-    var y = [];
+    //    var x = [];
+    //    var y = [];
 
     var num_centroids = 220;
 
@@ -163,54 +172,51 @@ function setup() {
         //     console.log(centroids[i].point.x);
         //     console.log(map_x[centroids[i].point.x])};
         //     map_y[centroids[i].point.y] = centroids[i];
-        x.push(centroids[i].point.x);
-        y.push(centroids[i].point.y);
+        //       x.push(centroids[i].point.x);
+        //      y.push(centroids[i].point.y);
     }
 
-
+    // cluster the cloud centers using k means
     for (var i = 0; i < 5; i++) {
         kmeans();
     }
 
+/*
+    var pointclusters = [];
+
+    for (var i = 0; i < xlist.length; i++){
+        for(j = 0; j < ylist.length; j++){
+
+        }
+    }
+
+*/
 
 
+    area_map = {};
+    num_cluster = 0;
     var new_centroids = centroids;
-    for (var i = 0; i < new_centroids.length - 1; i++) {
-        //    console.log("arr length " + new_centroids.length);
-        var centroid_a = new_centroids[i];
-        //    console.log(i);
-        //    console.log(centroid_a);
 
-        //cluster every 10 centroids into a polygon
+    for (var i = 0; i < new_centroids.length - 1; i++) {
+
+        var centroid_a = new_centroids[i];
+
         var map = {};
         var distances = [];
 
         for (var j = 1; j < new_centroids.length; j++) {
-            //      console.log("j " + j);
             var centroid_b = new_centroids[j];
             var distance = dist(centroid_a.point.x, centroid_a.point.y, centroid_b.point.x, centroid_b.point.y);
             if (int(distance)) {
                 distances.push(int(distance));
                 map[int(distance)] = centroid_b;
             }
-
         }
+        var closest = sort(distances); // centroids sorted by distance from centroid a
 
-        //     console.log(distances);
-
-        var closest = sort(distances);
-
+        new_centroids = [];
         var area_cluster = [];
 
-        //   console.log("closest " + closest.length);
-        //   console.log(closest);
-
-
-
-
-        //    if (closest.length) {
-        new_centroids = [];
-        //  console.log("new cetnroids length " + new_centroids.length);
 
         var red = rand(0, 255);
         var green = rand(0, 255);
@@ -221,42 +227,79 @@ function setup() {
 
             if (closest[k] < 200) { // initial proximity value setting
 
-
                 var clus = map[closest[k]];
                 clus.color.r = red;
                 clus.color.g = green;
                 clus.color.b = blue;
                 clus.cluster = num_cluster;
                 area_cluster.push(clus);
-                //        closest.shift();      // clusters are more organic
+          //         closest.shift();      // clusters are more organic
                 centroid_a.color.r = red;
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
                 centroid_a.cluster = num_cluster;
-                console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
+                //        console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
 
                 area_cluster.push(centroid_a);
-                //            console.log("num cluser " + num_cluster);
-                //            console.log(area_cluster);
                 area_map[num_cluster] = area_cluster;
 
+
+                //      console.log("are clusetr num " + num_cluster);
+                //                console.log(area_cluster);
+
                 //           console.log(area_cluster);
-            } else {
-                //  for (k = 10; k < closest.length; k++) {
+            }
+            else {
                 new_centroids.push(map[closest[k]]);
             }
+
+
         }
+
+        if (area_cluster.length == 0) {
+            //    console.log("centroid a");
+            //    console.log(centroid_a)
+            centroid_a.color.r = red;
+            centroid_a.color.g = green;
+            centroid_a.color.b = blue;
+            centroid_a.cluster = num_cluster;
+            area_cluster.push(centroid_a);
+            area_map[num_cluster] = area_cluster;
+        }
+
         num_cluster++;
-        //       } else {//remaining centroids
-        //           console.log(closest.length);
-        //       }
+
     }
 
+    /*
+
+    console.log(area_map);
 
     for (var i = 0; i < clus_colors.length; i++) {
         console.log("i " + i + " " + clus_colors[i]);
     }
 
+    
+    for (var i = 0; i < num_cluster - 1; i++) {
+        console.log(" i " + i);
+        console.log(area_map[i]);
+    }
+*/
+
+/*
+    for (j = 0; j < num_cluster; j++) {
+        pol = new Polygon();
+        var ar = [];
+        var c = area_map[j];
+    //    console.log(" j " + j);
+    //    console.log(c);
+        for (var i = 0; i < c.length; i++) {
+            ar.push({ x: c[i].point.x, y: c[i].point.y });
+        }
+        pol.ar = ar;
+        pol.draw();
+    }
+    */
     /*
         for(var r = 0; r < num_cluster ; r++){
             var cl = area_map[r];
@@ -269,31 +312,31 @@ function setup() {
 
 
     /*
-}
-}
-/*
-var x_sorted = sort(x);
-var y_sorted = sort(y);
-
-var area_map = {};
-//    var distances = [];
-var y_new = y_sorted;
-
-console.log("x sorted "+ x_sorted);
-
-console.log("y sorted "+ y_sorted);
-
-while (x_sorted.length > 0) {
-console.log(" in while ");
-for (var i = 0; i < x_sorted.length; i++) {
+    }
+    }
+    /*
+    var x_sorted = sort(x);
+    var y_sorted = sort(y);
+    
+    var area_map = {};
+    //    var distances = [];
+    var y_new = y_sorted;
+    
+    console.log("x sorted "+ x_sorted);
+    
+    console.log("y sorted "+ y_sorted);
+    
+    while (x_sorted.length > 0) {
+    console.log(" in while ");
+    for (var i = 0; i < x_sorted.length; i++) {
     console.log("map_x"+map_x);
     console.log("x " + x_sorted[i]);
     var centroid_a = map_x[x_sorted[i]];
     console.log(centroid_a);
     var map_dist = {};
     var dists = [];
-
     
+     
     for (j = 0; j < y_sorted.length; j++) {
         
         console.log("y " + y_sorted[j] );
@@ -303,19 +346,19 @@ for (var i = 0; i < x_sorted.length; i++) {
       
         if (distance) {
             dists.push(distance);
-  //          console.log("dist "+distance);
+    //          console.log("dist "+distance);
             //centroids_valid[centroid];
             map_dist[distance] = centroid_b;
         }
        // console.log(map_dist);
     }
     var closest_b = sort(dists);
-
+    
     //console.log("closest "+closest_b.length);
-
-
+    
+    
     var area_cluster = [];
-
+    
     var r = rand(0, 255);
     var g = rand(0, 255);
     var b = rand(0, 255);
@@ -324,7 +367,7 @@ for (var i = 0; i < x_sorted.length; i++) {
     centroid_a.color.g = g;
     centroid_a.color.b = b;
     area_cluster.push(centroid_a);
-
+    
     if (closest_b.length > 0) {
         console.log("closest _b ist non zero");
         for (var k = 0; k < 10; k++) {
@@ -335,7 +378,7 @@ for (var i = 0; i < x_sorted.length; i++) {
             close_centroid.color.g = g;
             close_centroid.color.b = b;
             area_cluster.push(close_centroid);
-
+    
             closest_b.shift();
         }
         var y_new = [];
@@ -346,9 +389,9 @@ for (var i = 0; i < x_sorted.length; i++) {
             y_new.push(map_dist[closest_b[k]].point.y);
         }
         y_sorted = sort(y_new);
-
-
-
+    
+    
+    
         console.log (" new y sorted "+ y_sorted);
         
         map_y_new = {};
@@ -366,25 +409,25 @@ for (var i = 0; i < x_sorted.length; i++) {
         map_y = map_y_new;
         x_sorted = sort(x_new);
         
-
+    
     }
-
+    
     console.log(area_cluster);
-
+    
     area_map[x_sorted[i]] = area_cluster;
-
-
- 
-}
-}
-
-*/
+    
+    
+     
+    }
+    }
+    
+    */
 
     /*
     points2.push(new Points2());
     points2[i].x = centroids[i].point.x;
     points2[i].y = centroids[i].point.y
-*/
+    */
 
 
     /*
@@ -395,8 +438,8 @@ for (var i = 0; i < x_sorted.length; i++) {
         //   centroids[i].point.x = random(width);
         //   centroids[i].point.y = random(height);
     }
-    
-*/
+     
+    */
     /*
     buffer.copy(
         // source
@@ -405,7 +448,7 @@ for (var i = 0; i < x_sorted.length; i++) {
         0, 0, windowWidth, windowHeight,
         // destination x, y, w, h
         0, 0, buffer.width, buffer.height);
-    
+     
     console.log(buffer);    buffer.copy(
         // source
         gcanvas,
@@ -413,9 +456,11 @@ for (var i = 0; i < x_sorted.length; i++) {
         0, 0, windowWidth, windowHeight,
         // destination x, y, w, h
         0, 0, buffer.width, buffer.height);
-    
+     
     console.log(buffer);
     */
+
+
 
 
     ellipseMode(RADIUS);
@@ -427,6 +472,14 @@ function draw() {
     //track circle movement
     posX = mouseX;
     posY = (mouseY * 0.9) - (windowHeight * 0.1);
+
+    /*
+        var cluster = area_map[0];
+        console.log(cluster);
+        var area = new Area();
+        area.ar = cluster;
+        area.draw();
+        */
 
 
     loadPixels();
@@ -446,30 +499,54 @@ function draw() {
         }
     */
 
-    
-    /*
-         // draw centroids
-         for (var i = 0; i < centroids.length; i++) {
-             centroids[i].draw();
-         }
-     
-*/
+/*
 
-    /*
-var cluster = area_map[0];
-console.log(cluster);
-var area = new Area();
-area.ar = cluster;
-area.draw();
-*/
-
-    /*
- 
     // draw centroids
-    for (var i = 0; i < centroids2.length; i++) {
-        points2[i].draw();
+    for (var i = 0; i < centroids.length; i++) {
+        centroids[i].draw();
     }
+*/
+
+
+    //    noFill();
+    //     strokeWeight(14);
+
+
+    for (j = 0; j < num_cluster; j++) {
+        pol = new Polygon();
+        var ar = [];
+        var c = area_map[j];
+    //    console.log(" j " + j);
+    //    console.log(c);
+        for (var i = 0; i < c.length; i++) {
+            ar.push({ x: c[i].point.x, y: c[i].point.y });
+        }
+        pol.ar = ar;
+        pol.draw();
+    }
+
+    /*
+    for (j = 0; j < num_cluster; j++) {
+        pol = new Polygon();
+        var ar = [];
+        var c = area_map[j];
+        console.log(" j " + j);
+        console.log(c);
+        for (var i = 0; i < c.length; i++) {
+            ar.push({ x: c[i].point.x, y: c[i].point.y });
+        }
+        pol.ar = ar;
+        pol.draw();
+    }
+
     */
+    /*
+   
+      // draw centroids
+      for (var i = 0; i < centroids2.length; i++) {
+          points2[i].draw();
+      }
+      */
 
     //limit drawing to within canvas
     if (posX > 0 && posX < windowWidth && posY > windowHeight * 0.0005 && posY < windowHeight) {
@@ -522,6 +599,7 @@ area.draw();
                 cur_cl.color.b = 0;
                 */
                 cur_cl.draw();
+       //         grains(posX, posY);
                 /*
                 cur_cl.color.r = r;
                 cur_cl.color.g = g;
@@ -535,13 +613,13 @@ area.draw();
 
             }
             //    console.log(vals);
-            console.log(" keys " + uniq(keys));
+         //   console.log(" keys " + uniq(keys));
 
             var num_keys = uniq(keys);
             //    var uniq = [new Set(keys)];
 
             for (var i = 0; i < uniq.length; i++) {
-                console.log("key " + keys[i]);
+     //           console.log("key " + keys[i]);
                 vals.push(clus_map[uniq[i]])
             }
 
@@ -550,24 +628,31 @@ area.draw();
                 att = 0.7;
                 dec = 0.7;
                 rate = rand(80, 90);
+                grains(posX, posY);
 
             }
             if (num_keys.length == 2) {
                 //    console.log("num keys 2 "+ uniq.length);
                 att = rand(0.4, 0.5);
                 dec = rand(0.5, 0.6);
-                rate = rand(15, 35);
+                rate = rand(15, 20);
+              //  grains(posX, posY);
+                grains(posX, posY);
+
             }
             else if (num_keys.length == 3) {
                 //    console.log("num keys 3 "+ uniq.length);
-                att = rand(0.2, 0.3);
-                dec = rand(0.25, 0.3);
-                rate = rand(10, 12);
+                att = 0.01;
+                dec = 0.01;
+                rate = rand(15,30);
+                grains(posX, posY);
+                
             } else if (num_keys.length == 4) {
                 //    console.log("num keys 3 "+ uniq.length);
                 att = 0.1;
                 dec = 0.1;
                 rate = 10;
+                grains(posX, posY);
             }
 
 
@@ -649,7 +734,7 @@ area.draw();
             }
 */
 
-            grains(posX, posY);
+          // grains(posX, posY);
 
         }
 
@@ -720,21 +805,18 @@ function windowResized() {
 
 
 function reshuffle() {
-    var prox_val = rand(100,1000); // proximity value
-    //var new_centroids = [];
+    num_cluster = 0;
+    area_map = {};
+    var prox_val = rand(150, 500); // proximity value
     var new_centroids = centroids;
     for (var i = 0; i < new_centroids.length - 1; i++) {
-        //    console.log("arr length " + new_centroids.length);
         var centroid_a = new_centroids[i];
-        //    console.log(i);
-        //    console.log(centroid_a);
 
         //cluster every 10 centroids into a polygon
         var map = {};
         var distances = [];
 
         for (var j = 1; j < new_centroids.length; j++) {
-            //      console.log("j " + j);
             var centroid_b = new_centroids[j];
             var distance = dist(centroid_a.point.x, centroid_a.point.y, centroid_b.point.x, centroid_b.point.y);
             if (int(distance)) {
@@ -744,21 +826,11 @@ function reshuffle() {
 
         }
 
-        //     console.log(distances);
-
         var closest = sort(distances);
 
         var area_cluster = [];
 
-        //   console.log("closest " + closest.length);
-        //   console.log(closest);
-
-
-
-
-        //    if (closest.length) {
         new_centroids = [];
-        //  console.log("new cetnroids length " + new_centroids.length);
 
         var red = rand(0, 255);
         var green = rand(0, 255);
@@ -776,7 +848,7 @@ function reshuffle() {
                 clus.color.b = blue;
                 clus.cluster = num_cluster;
                 area_cluster.push(clus);
-                //        closest.shift();      // clusters are more organic
+               //         closest.shift();      // clusters are more organic
                 centroid_a.color.r = red;
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
@@ -784,27 +856,33 @@ function reshuffle() {
                 console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
 
                 area_cluster.push(centroid_a);
-                //            console.log("num cluser " + num_cluster);
-                //            console.log(area_cluster);
+                area_map[num_cluster] = [];
                 area_map[num_cluster] = area_cluster;
 
-                //           console.log(area_cluster);
             } else {
-                //  for (k = 10; k < closest.length; k++) {
                 new_centroids.push(map[closest[k]]);
+            }
+            if (area_cluster.length == 0) {
+                //     console.log("centroid a");
+                //     console.log(centroid_a)
+                centroid_a.color.r = red;
+                centroid_a.color.g = green;
+                centroid_a.color.b = blue;
+                centroid_a.cluster = num_cluster;
+                area_cluster.push(centroid_a);
+                area_map[num_cluster] = [];
+                area_map[num_cluster] = area_cluster;
             }
         }
         num_cluster++;
-        //       } else {//remaining centroids
-        //           console.log(closest.length);
-        //       }
     }
 
-    console.log("Proximity value "+prox_val);
-
-    for (var i = 0; i < clus_colors.length; i++) {
-        console.log("i " + i + " " + clus_colors[i]);
-    }
+    console.log("Proximity value " + prox_val);
+    /*
+        for (var i = 0; i < clus_colors.length; i++) {
+            console.log("i " + i + " " + clus_colors[i]);
+        }
+        */
 
 }
 
@@ -942,6 +1020,58 @@ function randomY() {
 }
 
 
+function Polygon() {
+    /*
+        this.p1 = new Points();
+        this.p2 = new Points()
+        this.p2.x = 680;
+        this.p2.y = 190;
+        this.p3 = new Points();
+        this.p3.x = 210;
+        this.p3.y = 170;
+        this.p4 =  new Points();
+        this.p4.x = 320;
+        this.p4.y = 910;
+        
+        this.p1.x = 840;
+        this.p1.y = 910;
+    */
+
+    this.ar = [{ x: 840, y: 910 }, { x: 680, y: 190 }, { x: 210, y: 170 }, { x: 320, y: 910 }];
+
+
+    /*
+       
+       this.p1 = {x:840,y:910};
+       this.p2 = {x:680,y:190};
+       this.p3 = {x:210,y:170};
+       this.p4 = {x:320,y:910};
+   
+       this.ar = [this.p1,this.p2,this.p3,this.p4];
+       */
+
+    //   console.log(this.p1.x + " "+this.p2.x+" "+this.p3.x+ " "+this.p4.x);
+
+    this.draw = function () {
+        //     noStroke();
+        noFill();
+        stroke(170, 130);
+
+        strokeWeight(10);
+
+        var l = this.ar.length;
+
+        beginShape();
+        curveVertex(this.ar[0].x, this.ar[0].y);
+        for (var i = 0; i < this.ar.length; i++) {
+            curveVertex(this.ar[i].x, this.ar[i].y);
+        }
+        curveVertex(this.ar[l - 1].x, this.ar[l - 1].y);
+        endShape(CLOSE);
+    }
+}
+
+
 function Area() {
     console.log("in area ");
     this.ar = [];
@@ -949,6 +1079,11 @@ function Area() {
         noStroke();
         noFill();
 
+        for (var i = 0; i < this.ar.length - 1; i++) {
+            line(this.ar[i].point.x, this.ar[i].point.y, this.ar[i + 1].point.x, this.ar[i + 1].point.y);
+        }
+
+        /*
         beginShape();
         curveVertex(this.ar[0].point.x, this.ar[0].point.y);
         for (var i = 1; i < this.ar.length - 2; i++) {
@@ -956,23 +1091,13 @@ function Area() {
         }
         curveVertex(this.ar[this.ar.length - 1].point.x, this.ar[this.ar.length - 1].point.y);
         endShape();
+        */
     }
 
 }
 
 
 
-function Centroids(a, b, c) {
-    this.color = { r: a, g: b, b: c };
-    this.point = { x: 0, y: 0 };
-    this.cluster = 0;
-
-    this.draw = function () {
-        noStroke();
-        fill(this.color.r, this.color.g, this.color.b)
-        ellipse(this.point.x, this.point.y, 10, 10);
-    }
-}
 
 
 
