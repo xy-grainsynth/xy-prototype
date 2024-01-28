@@ -208,7 +208,7 @@ function setup() {
         var red = rand(0, 255);
         var green = rand(0, 255);
         var blue = rand(0, 255);
-        clus_colors.push([red,green,blue]);
+        clus_colors.push([red, green, blue]);
 
         for (var k = 0; k < closest.length; k++) {
 
@@ -226,13 +226,13 @@ function setup() {
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
                 centroid_a.cluster = num_cluster;
-                console.log("setting cluster "+num_cluster + " "+ centroid_a.cluster);
+                console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
 
                 area_cluster.push(centroid_a);
                 //            console.log("num cluser " + num_cluster);
                 //            console.log(area_cluster);
                 area_map[num_cluster] = area_cluster;
-                
+
                 //           console.log(area_cluster);
             } else {
                 //  for (k = 10; k < closest.length; k++) {
@@ -246,8 +246,8 @@ function setup() {
     }
 
 
-    for (var i =0; i < clus_colors.length; i++){
-        console.log("i "+ i +" "+clus_colors[i]);
+    for (var i = 0; i < clus_colors.length; i++) {
+        console.log("i " + i + " " + clus_colors[i]);
     }
 
     /*
@@ -434,12 +434,12 @@ function draw() {
         bg[i].draw();
     }
 
-
-    // draw points
-    for (var i = 0; i < points.length; i++) {
-        points[i].draw();
-    }
-
+    /*
+        // draw points
+        for (var i = 0; i < points.length; i++) {
+            points[i].draw();
+        }
+    */
 
     /*
     
@@ -504,49 +504,53 @@ area.draw();
             var clus_map = {};
             var vals = [];
             var keys = [];
-            console.log("##################################### "+ num_cluster);
+            console.log("##################################### " + num_cluster);
             for (var i = 0; i < 10; i++) {
                 var cur_cl = map[closest[i]];
-              //  console.log(cur_cl);
+                //  console.log(cur_cl);
                 cur_cl.draw();
                 keys.push(cur_cl.cluster);
-           //     console.log(cur_cl.cluster);
+                //     console.log(cur_cl.cluster);
                 //   if(cur_cl.cluster in clus_map){
                 clus_map[cur_cl.cluster] = clus_map[cur_cl.cluster] + 1;
                 //   }
 
             }
-        //    console.log(vals);
-            console.log(" keys "+uniq(keys));
+            //    console.log(vals);
+            console.log(" keys " + uniq(keys));
 
             var num_keys = uniq(keys);
-        //    var uniq = [new Set(keys)];
-        
+            //    var uniq = [new Set(keys)];
+
             for (var i = 0; i < uniq.length; i++) {
-                console.log("key "+keys[i]);
+                console.log("key " + keys[i]);
                 vals.push(clus_map[uniq[i]])
             }
 
-            if(num_keys.length == 1){
-            //    console.    console.log();log("num keys 1 "+ uniq.length    console.log(););
+            if (num_keys.length == 1) {
+                //    console.    console.log();log("num keys 1 "+ uniq.length    console.log(););
                 att = 0.7;
                 dec = 0.7;
-                rate = rand(80,90);
-                
+                rate = rand(80, 90);
+
             }
-            if(num_keys.length ==2){
-            //    console.log("num keys 2 "+ uniq.length);
-                att = 0.5;
-                dec = 0.5;
-                rate = rand(20,35);
+            if (num_keys.length == 2) {
+                //    console.log("num keys 2 "+ uniq.length);
+                att = rand(0.4,0.5);
+                dec = rand(0.5,0.6);
+                rate = rand(15, 35);
             }
-            else if (num_keys.length>=3){
-            //    console.log("num keys 3 "+ uniq.length);
-                att = rand(0.1,0.3);
-                dec = 0.2;
-                rate = rand(10,12);
+            else if (num_keys.length == 3) {
+                //    console.log("num keys 3 "+ uniq.length);
+                att = rand(0.2, 0.3);
+                dec = rand(0.25,0.3);
+                rate = rand(10, 12);
+            } else if (num_keys.length ==4) {
+                //    console.log("num keys 3 "+ uniq.length);
+                att = 0.1;
+                dec = 0.1;
+                rate = 10;
             }
-           
 
 
 
@@ -684,7 +688,7 @@ area.draw();
         //    console.log("pixel r val " + pixels[index] + " " + " frame rate " + frate);
 
         */
-       frate = rate;
+        frate = rate;
         frameRate(frate);
     }
 }
@@ -718,7 +722,7 @@ function rand(min, max) {
 
 function uniq(a) {
     var seen = {};
-    return a.filter(function(item) {
+    return a.filter(function (item) {
         return seen.hasOwnProperty(item) ? false : (seen[item] = true);
     });
 }
@@ -757,14 +761,14 @@ function grains(pos, pitch) {
 
     //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
 
-/*
-    if (gRate < 1) {
-        grain.playbackRate.value = 0.5;
-    } else {
-        grain.playbackRate.value = gRate;
-    }
-
-*/
+    /*
+        if (gRate < 1) {
+            grain.playbackRate.value = 0.5;
+        } else {
+            grain.playbackRate.value = gRate;
+        }
+    
+    */
     grain.connect(contour);
 
     playtime = att + dec;
