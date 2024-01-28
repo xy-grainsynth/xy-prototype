@@ -168,9 +168,9 @@ function setup() {
 
     var new_centroids = centroids;
     for (var i = 0; i < new_centroids.length - 1; i++) {
-        console.log("arr length " + new_centroids.length);
+    //    console.log("arr length " + new_centroids.length);
         var centroid_a = new_centroids[i];
-        console.log(i);
+    //    console.log(i);
         //    console.log(centroid_a);
 
         //cluster every 10 centroids into a polygon
@@ -194,15 +194,15 @@ function setup() {
 
         var area_cluster = [];
 
-        console.log("closest " + closest.length);
-        console.log(closest);
+     //   console.log("closest " + closest.length);
+     //   console.log(closest);
 
 
 
 
         //    if (closest.length) {
         new_centroids = [];
-        console.log("new cetnroids length " + new_centroids.length);
+      //  console.log("new cetnroids length " + new_centroids.length);
 
         var red = rand(0, 255);
         var green = rand(0, 255);
@@ -223,8 +223,8 @@ function setup() {
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
                 area_cluster.push(centroid_a);
-                console.log("num cluser " + num_cluster);
-                console.log(area_cluster);
+    //            console.log("num cluser " + num_cluster);
+    //            console.log(area_cluster);
                 area_map[num_cluster] = area_cluster;
                 num_cluster++;
                 //           console.log(area_cluster);
