@@ -91,6 +91,13 @@ window.onload = function () {
         ctx.resume().then(() => {
         });
     });
+
+    document.getElementById('shuffleButton').addEventListener('click', function () {
+        console.log("calling rshuffle");
+        reshuffle();
+      });
+      
+      
 }
 
 //https://stackoverflow.com/questions/10592411/disable-scrolling-in-all-mobile-devices
@@ -212,7 +219,7 @@ function setup() {
 
         for (var k = 0; k < closest.length; k++) {
 
-            if (closest[k] < 200) {
+            if (closest[k] < 200) { // initial proximity value setting
 
 
                 var clus = map[closest[k]];
@@ -411,8 +418,6 @@ for (var i = 0; i < x_sorted.length; i++) {
     */
 
 
-    //   loadPixels();
-
     ellipseMode(RADIUS);
     noStroke();
 }
@@ -441,14 +446,14 @@ function draw() {
         }
     */
 
-    /*
+    
     
          // draw centroids
          for (var i = 0; i < centroids.length; i++) {
              centroids[i].draw();
          }
      
-*/
+
 
     /*
 var cluster = area_map[0];
@@ -505,10 +510,19 @@ area.draw();
             var vals = [];
             var keys = [];
             console.log("##################################### " + num_cluster);
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 7; i++) {
                 var cur_cl = map[closest[i]];
                 //  console.log(cur_cl);
+                var r =  cur_cl.color.r;
+                var g =  cur_cl.color.g;
+                var b =  cur_cl.color.b;
+                cur_cl.color.r = 0;
+                cur_cl.color.g = 0;
+                cur_cl.color.b = 0;
                 cur_cl.draw();
+                cur_cl.color.r = r;
+                cur_cl.color.g = g;
+                cur_cl.color.b = b;
                 keys.push(cur_cl.cluster);
                 //     console.log(cur_cl.cluster);
                 //   if(cur_cl.cluster in clus_map){
@@ -536,16 +550,16 @@ area.draw();
             }
             if (num_keys.length == 2) {
                 //    console.log("num keys 2 "+ uniq.length);
-                att = rand(0.4,0.5);
-                dec = rand(0.5,0.6);
+                att = rand(0.4, 0.5);
+                dec = rand(0.5, 0.6);
                 rate = rand(15, 35);
             }
             else if (num_keys.length == 3) {
                 //    console.log("num keys 3 "+ uniq.length);
                 att = rand(0.2, 0.3);
-                dec = rand(0.25,0.3);
+                dec = rand(0.25, 0.3);
                 rate = rand(10, 12);
-            } else if (num_keys.length ==4) {
+            } else if (num_keys.length == 4) {
                 //    console.log("num keys 3 "+ uniq.length);
                 att = 0.1;
                 dec = 0.1;
@@ -698,6 +712,98 @@ area.draw();
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
+
+
+
+function reshuffle() {
+    var prox_val = rand(100,1000); // proximity value
+    //var new_centroids = [];
+    var new_centroids = centroids;
+    for (var i = 0; i < new_centroids.length - 1; i++) {
+        //    console.log("arr length " + new_centroids.length);
+        var centroid_a = new_centroids[i];
+        //    console.log(i);
+        //    console.log(centroid_a);
+
+        //cluster every 10 centroids into a polygon
+        var map = {};
+        var distances = [];
+
+        for (var j = 1; j < new_centroids.length; j++) {
+            //      console.log("j " + j);
+            var centroid_b = new_centroids[j];
+            var distance = dist(centroid_a.point.x, centroid_a.point.y, centroid_b.point.x, centroid_b.point.y);
+            if (int(distance)) {
+                distances.push(int(distance));
+                map[int(distance)] = centroid_b;
+            }
+
+        }
+
+        //     console.log(distances);
+
+        var closest = sort(distances);
+
+        var area_cluster = [];
+
+        //   console.log("closest " + closest.length);
+        //   console.log(closest);
+
+
+
+
+        //    if (closest.length) {
+        new_centroids = [];
+        //  console.log("new cetnroids length " + new_centroids.length);
+
+        var red = rand(0, 255);
+        var green = rand(0, 255);
+        var blue = rand(0, 255);
+        clus_colors.push([red, green, blue]);
+
+        for (var k = 0; k < closest.length; k++) {
+
+            if (closest[k] < prox_val) {
+
+
+                var clus = map[closest[k]];
+                clus.color.r = red;
+                clus.color.g = green;
+                clus.color.b = blue;
+                clus.cluster = num_cluster;
+                area_cluster.push(clus);
+                //        closest.shift();      // clusters are more organic
+                centroid_a.color.r = red;
+                centroid_a.color.g = green;
+                centroid_a.color.b = blue;
+                centroid_a.cluster = num_cluster;
+                console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
+
+                area_cluster.push(centroid_a);
+                //            console.log("num cluser " + num_cluster);
+                //            console.log(area_cluster);
+                area_map[num_cluster] = area_cluster;
+
+                //           console.log(area_cluster);
+            } else {
+                //  for (k = 10; k < closest.length; k++) {
+                new_centroids.push(map[closest[k]]);
+            }
+        }
+        num_cluster++;
+        //       } else {//remaining centroids
+        //           console.log(closest.length);
+        //       }
+    }
+
+    console.log("Proximity value "+prox_val);
+
+    for (var i = 0; i < clus_colors.length; i++) {
+        console.log("i " + i + " " + clus_colors[i]);
+    }
+
+}
+
 
 function Circles() {
     this.x;

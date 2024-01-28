@@ -126,6 +126,26 @@ time, mark, audio, video {
 	    background-color: #5AFF8C;
 	}
 
+
+	#shuffleButton {
+	    background-color: rgb(105, 204, 192);
+	    outline: none;
+
+		border-style: solid;
+		border-color: black;
+		border-width: thin;
+		border-radius: 10px;
+
+	    width: 70%;
+
+	    transition: 0.7s;
+	}
+
+
+	#shuffleButton:hover {
+	    background-color: #5AFF8C;
+	}
+
 	/***********/
 	/* sliders */
 
@@ -184,7 +204,13 @@ time, mark, audio, video {
 	}
 
 	#startContainer{
-		left: 42%;
+		left: 60%;
+		top: 10%;
+	}
+
+
+	#shuffleContainer{
+		left: 80%;
 		top: 10%;
 	}
 
@@ -309,6 +335,25 @@ time, mark, audio, video {
 	    background-color: #5AFF8C;
 	}
 
+
+	#shuffleButton {
+	    background-color: rgb(105, 204, 192);
+	    outline: none;
+
+		border-style: solid;
+		border-color: black;
+		border-width: thin;
+		border-radius: 10px;
+
+	    width: 70%;
+
+	    transition: 0.7s;
+	}
+
+	#shuffleButton:hover {
+	    background-color: #5AFF8C;
+	}
+
 	/***********/
 	/* sliders */
 
@@ -363,6 +408,11 @@ time, mark, audio, video {
 
 	#startContainer{
 		left: 12%;
+		top: 10%;
+	}
+
+	#shuffleContainer{
+		left: 80%;
 		top: 10%;
 	}
 
@@ -487,6 +537,24 @@ time, mark, audio, video {
 	    background-color: #5AFF8C;
 	}
 
+	#shuffleButton {
+	    background-color: rgb(105, 204, 192);
+	    outline: none;
+
+		border-style: solid;
+		border-color: black;
+		border-width: thin;
+		border-radius: 10px;
+
+	    width: 70%;
+
+	    transition: 0.7s;
+	}
+
+	#shuffleButton:hover {
+	    background-color: #5AFF8C;
+	}
+
 	/***********/
 	/* sliders */
 
@@ -541,6 +609,11 @@ time, mark, audio, video {
 
 	#startContainer{
 		left: 12%;
+		top: 10%;
+	}
+
+	#shuffleContainer{
+		left: 80%;
 		top: 10%;
 	}
 
@@ -665,6 +738,26 @@ time, mark, audio, video {
 	    background-color: #5AFF8C;
 	}
 
+	#shuffleButton {
+	    background-color: rgb(105, 204, 192);
+	    outline: none;
+
+		border-style: solid;
+		border-color: black;
+		border-width: thin;
+		border-radius: 10px;
+
+	    width: 50%;
+
+	    transition: 0.7s;
+	}
+
+	#shuffleButton:hover {
+	    background-color: #5AFF8C;
+	}
+
+	
+
 	/***********/
 	/* sliders */
 
@@ -719,6 +812,11 @@ time, mark, audio, video {
 
 	#startContainer{
 		left: 12%;
+		top: 10%;
+	}
+
+	#shuffleContainer{
+		left: 80%;
 		top: 10%;
 	}
 
@@ -843,6 +941,24 @@ time, mark, audio, video {
 	    background-color: #5AFF8C;
 	}
 
+	#shuffleButton {
+	    background-color: rgb(105, 204, 192);
+	    outline: none;
+
+		border-style: solid;
+		border-color: black;
+		border-width: thin;
+		border-radius: 10px;
+
+	    width: 50%;
+
+	    transition: 0.7s;
+	}
+
+	#shuffleButton:hover {
+	    background-color: #5AFF8C;
+	}
+
 	/***********/
 	/* sliders */
 
@@ -897,6 +1013,11 @@ time, mark, audio, video {
 
 	#startContainer{
 		left: 12%;
+		top: 10%;
+	}
+
+	#shuffleContainer{
+		left: 80%;
 		top: 10%;
 	}
 
@@ -1021,6 +1142,24 @@ time, mark, audio, video {
 	    background-color: #5AFF8C;
 	}
 
+
+	#shuffleButton {
+	    background-color: rgb(105, 204, 192);
+	    outline: none;
+
+		border-style: solid;
+		border-color: black;
+		border-width: thin;
+		border-radius: 10px;
+
+	    width: 50%;
+
+	    transition: 0.7s;
+	}
+
+	#shuffleButton:hover {
+	    background-color: #5AFF8C;
+	}
 	/***********/
 	/* sliders */
 
@@ -1075,6 +1214,11 @@ time, mark, audio, video {
 
 	#startContainer{
 		left: 12%;
+		top: 10%;
+	}
+
+	#shuffleContainer{
+		left: 80%;
 		top: 10%;
 	}
 
