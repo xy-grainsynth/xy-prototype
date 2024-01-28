@@ -429,14 +429,14 @@ function draw() {
         }
     
     
-        
+        /*
         
              // draw centroids
              for (var i = 0; i < centroids.length; i++) {
                  centroids[i].draw();
              }
          
-    
+    */
 
              /*
     var cluster = area_map[0];
