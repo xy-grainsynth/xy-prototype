@@ -613,10 +613,6 @@ time, mark, audio, video {
 		top: 10%;
 	}
 
-	#shuffleContainer{
-		left: 60%;
-		top: 10%;
-	}
 
 	#canvasContainer {
 		position: fixed;
@@ -816,10 +812,6 @@ time, mark, audio, video {
 		top: 10%;
 	}
 
-	#shuffleContainer{
-		left: 60%;
-		top: 10%;
-	}
 
 	#canvasContainer {
 		position: fixed;
@@ -1017,10 +1009,7 @@ time, mark, audio, video {
 		top: 10%;
 	}
 
-	#shuffleContainer{
-		left: 60%;
-		top: 10%;
-	}
+
 
 	#canvasContainer {
 		position: fixed;
@@ -1218,10 +1207,6 @@ time, mark, audio, video {
 		top: 10%;
 	}
 
-	#shuffleContainer{
-		left: 60%;
-		top: 10%;
-	}
 
 	#canvasContainer {
 		position: fixed;
