@@ -1,3 +1,33 @@
+// ######### CLUSTER DEFINITIONS
+/*
+sample: riverwater.wav, driest sound in most dense regions
+attack: 0.7
+decay: 0.8
+density: 78
+delay: 0.3
+feedback: 0.2
+pitch:9
+*/
+
+dense_params_river = {
+    attack: 0.7,
+    decay: 0.8,
+    density: 78,
+    delay: 0.3,
+    feedback: 0.2,
+    pitch: 9
+}
+
+
+var red_dense_cl = 0;
+var green_dense_cl = 0;
+var blue_dense_cl = 255;
+
+
+
+var dense_clusters = [];
+
+
 var rad = 15;
 var shade = 150;
 
@@ -5,9 +35,10 @@ var bg = [];
 var dots = []
 
 //grain globals
+var audioBuffer;
+
 var att = parseFloat(PARAMS.attack.toFixed(2));
 var dec = parseFloat(PARAMS.decay.toFixed(2));
-var audioBuffer;
 var spread = parseInt(PARAMS.spread);
 var del = parseFloat(PARAMS.delay.toFixed(1));
 var fb = parseFloat(PARAMS.feedback.toFixed(1));
@@ -98,41 +129,41 @@ window.onload = function () {
     bufferSwitch(0);
 
 
-/*
-
-    var switcher = document.getElementById("buffsel");
-    switcher.addEventListener("input", function () {
-        bufferSwitch(switcher.selectedIndex);
-    });
-*/
+    /*
+    
+        var switcher = document.getElementById("buffsel");
+        switcher.addEventListener("input", function () {
+            bufferSwitch(switcher.selectedIndex);
+        });
+    */
 
 
     //call slider values
     //     sliderRate = document.getElementById("density").value;
     //      rate = parseFloat(sliderRate);
- //   setInterval(function () {
- //       sliderSpr = document.getElementById("spread").value;
-  //      spread = parseFloat(sliderSpr);
-        //   sliderRate = document.getElementById("density").value;
-        //    rate = parseFloat(sliderRate);
-        //     sliderAtt = document.getElementById("attack").value;
-        //     att = parseFloat(sliderAtt);
-        //     sliderDec = document.getElementById("decay").value;
-        //     dec = parseFloat(sliderDec);
-  //  }, 50);
+    //   setInterval(function () {
+    //       sliderSpr = document.getElementById("spread").value;
+    //      spread = parseFloat(sliderSpr);
+    //   sliderRate = document.getElementById("density").value;
+    //    rate = parseFloat(sliderRate);
+    //     sliderAtt = document.getElementById("attack").value;
+    //     att = parseFloat(sliderAtt);
+    //     sliderDec = document.getElementById("decay").value;
+    //     dec = parseFloat(sliderDec);
+    //  }, 50);
 
 
-/*
-    document.getElementById('startButton').addEventListener('click', function () {
-        ctx.resume().then(() => {
+    /*
+        document.getElementById('startButton').addEventListener('click', function () {
+            ctx.resume().then(() => {
+            });
         });
-    });
-
-    document.getElementById('shuffleButton').addEventListener('click', function () {
-        console.log("calling rshuffle");
-        reshuffle();
-    });
-*/
+    
+        document.getElementById('shuffleButton').addEventListener('click', function () {
+            console.log("calling rshuffle");
+            reshuffle();
+        });
+    */
 
 }
 
@@ -324,6 +355,10 @@ function setup() {
         num_cluster++;
 
     }
+
+
+
+
 
     /*
 
@@ -525,9 +560,9 @@ function setup() {
 function draw() {
     //track circle movement
     posX = mouseX;
-  //  posY = (mouseY * 0.9) - (windowHeight * 0.1);
+    //  posY = (mouseY * 0.9) - (windowHeight * 0.1);
 
-  posY = pitchval;
+    posY = pitchval;
 
     /*
         var cluster = area_map[0];
@@ -562,6 +597,29 @@ function draw() {
             centroids[i].draw();
         }
     */
+
+    var cl_density = {};
+    for (var i = 0; i < clus_colors.length; i++) {
+
+        // console.log(area_map[i]);
+        if (area_map[i].length > 10 && area_map[i].length <= 30) {
+            //     console.log("i " + i + " " + clus_colors[i]);
+            // console.log(" length of cluster " + area_map[i].length);
+            dense_clusters.push(area_map[i].cluster);
+            pol = new Polygon();
+            var ar = [];
+            for (var j = 0; j < area_map[i].length; j++) {
+                ar.push({ x: area_map[i][j].point.x, y: area_map[i][j].point.y });
+                area_map[i][j].color.r = red_dense_cl;
+                area_map[i][j].color.g = green_dense_cl;
+                area_map[i][j].color.b = blue_dense_cl;
+                area_map[i][j].draw();
+            }
+            pol.ar = ar;
+            pol.draw();
+        }
+
+    }
 
 
     //    noFill();
@@ -666,15 +724,31 @@ function draw() {
             //    console.log(vals);
             //   console.log(" keys " + uniq(keys));
 
-            var num_keys = uniq(keys);
+            var num_keys = uniq(keys);  // cluster numbers around the cursor
             //    var uniq = [new Set(keys)];
 
             for (var i = 0; i < uniq.length; i++) {
                 //           console.log("key " + keys[i]);
-                vals.push(clus_map[uniq[i]])
+                vals.push(clus_map[uniq[i]]) // how many centroids of which cluster number are around the cursor
             }
 
             if (num_keys.length == 1) {
+
+                if (num_keys[0] in dense_clusters) {
+                    // cursor is in the middle of a dense cluster
+                    console.log(" cursor is inside a dense cluster");
+                    att = dense_params_river.attack;
+                    dec = dense_params_river.decay;
+                    rate = dense_params_river.density;
+                    del = dense_params_river.delay;
+                    fb = dense_params_river.feedback;
+                    pitchval = dense_params_river.pitch;
+                    posY = pitchval;
+                    console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb);
+                    grains(posX, posY);
+                }
+
+                /*
                 //    console.    console.log();log("num keys 1 "+ uniq.length    console.log(););
                 att = parseFloat(att.toFixed(2));
                 dec = parseFloat(dec.toFixed(2));
@@ -686,9 +760,57 @@ function draw() {
                 PARAMS.decay = dec;
                 PARAMS.density = rate;
                 grains(posX, posY);
+                */
 
             }
             if (num_keys.length == 2) {
+
+                // how many closest are from the same cluster and how many are from the densest cluster
+                if (num_keys[0] in dense_clusters && num_keys[1] in dense_clusters) {
+                    console.log("cursor is between two dense clusers " + num_keys[0] + " " + num_keys[1]);
+
+                    //   att = (((att - 0.1)<=0) === 'true') ? att-0.01 : att-0.1;
+                    att = att * 0.7;
+                    dec = dec * 0.7;
+                    rate = rate * (1 / 3);
+                    del = del;
+                    fb = fb;
+                    posY = pitchval * 0.1;
+                    console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb + " pitch " + posY);
+                    grains(posX, posY);
+
+                }
+                else if (num_keys[0] in dense_clusters) {
+                    // check how many centroids of dense cluster are around the cursor
+                    if (vals[0] >= 4) {
+                        console.log("cursor close to dense cluster " + num_keys[0]);
+                        // apply dense cluster sound parameters
+                        att = att * 0.2;
+                        dec = dec * 0.2;
+                        rate = rate * (1 / 10);
+                        del = del;
+                        fb = fb;
+                        posY = pitchval * (1 / 3);
+                        console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb + " pitch " + posY);
+                        grains(posX, posY);
+                    }
+                    else {
+                        // num centroids of dense cluster is 3 or less
+                    }
+                } if (num_keys[1] in dense_clusters) {
+                    if (vals[1] >= 4) {
+                        // apply dense cluster sound parameters
+                    }
+                    else {
+                        // num centroids of dense cluster is 3 or less
+                    }
+                }
+                else {
+
+                    console.log("other option");
+                }
+
+
                 att = parseFloat(att.toFixed(2));
                 dec = parseFloat(dec.toFixed(2));
 
@@ -704,12 +826,23 @@ function draw() {
                 //  grains(posX, posY);
                 grains(posX, posY);
 
+
             }
             else if (num_keys.length == 3) {
                 //    console.log("num keys 3 "+ uniq.length);
-                att = parseFloat(att.toFixed(2));
-                dec = parseFloat(dec.toFixed(2));
-                rate = density;
+                console.log("between 3 clusters");
+                att = parseFloat(PARAMS.attack.toFixed(2));
+                dec = parseFloat(PARAMS.decay.toFixed(2));
+                spread = parseInt(PARAMS.spread);
+                del = parseFloat(PARAMS.delay.toFixed(1));
+                fb = parseFloat(PARAMS.feedback.toFixed(1));
+                rate = parseInt(PARAMS.density);
+
+                pitchval = parseFloat(PARAMS.pitch.toFixed(1));
+                posY = pitchval;
+            //    att = parseFloat(att.toFixed(2));
+            //    dec = parseFloat(dec.toFixed(2));
+            //    rate = density;
 
                 //          att = 0.01;
                 //          dec = 0.01;
@@ -813,7 +946,7 @@ function draw() {
             */
             //   kmeansCentroids();
 
-            
+
             //draw circle when mouse is pressed
             for (var i = 0; i < dots.length; i++) {
                 dots[i].clicked(mouseX, mouseY, rad, shade);
@@ -1035,14 +1168,14 @@ function grains(pos, pitch) {
     contour.connect(delay);
     contour.connect(verbLevel);
     contour.connect(master);
-  //  delay.connect(master);
+    //  delay.connect(master);
 
     //verbLevel.gain.setValueAtTime(0.6, ctx.currentTime);
     //verbLevel.connect(master);
 
     var gRate = pitch;
-  //  var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
-  //  console.log("gRate " + gRate + " pitch "+ pitch);
+    //  var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
+    //  console.log("gRate " + gRate + " pitch "+ pitch);
     //console.log("posY "+posY + " - pitch/wh "+ pitch/windowHeight + " - reverse pitch val "+0.8 - (pitch/windowHeight) + " -grate " + gRate);
 
     grain.buffer = audioBuffer;
@@ -1053,22 +1186,22 @@ function grains(pos, pitch) {
     randFactor = spread; // smaller randFactor makes larger density, larger randFactor makes density smaller and the sounds more recognizable, its the grain length, spread
 
     //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
-  //  if(usepitch){
-        grain.playbackRate.value = gRate;
-       /* 
-        if (gRate < 1) {
-            grain.playbackRate.value = 0.5;
-        } else {
-            grain.playbackRate.value = gRate;
-        }
-        */
-    
+    //  if(usepitch){
+    grain.playbackRate.value = gRate;
+    /* 
+     if (gRate < 1) {
+         grain.playbackRate.value = 0.5;
+     } else {
+         grain.playbackRate.value = gRate;
+     }
+     */
+
     grain.connect(contour);
 
     playtime = att + dec;
     randval = rand(0, spread);
     startPos = (len * (pos / position)) + randval;
- //   console.log(startPos);
+    //   console.log(startPos);
     // grain start point = buf len * mouse position / x dimension + rand
     //grain.start(ctx.currentTime, (len * factor / position) + rand(0, randFactor));
     grain.start(ctx.currentTime, startPos);
