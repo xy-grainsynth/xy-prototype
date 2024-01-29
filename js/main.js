@@ -10,6 +10,19 @@ var dec;
 var audioBuffer;
 var spread;
 
+var att1;
+var att2;
+var att3;
+var att4;
+var dec1;
+var dec2;
+var dec3;
+var dec4;
+var density1;
+var density2;
+var density3;
+var density4;
+
 var ctx, master, cVerb, irBuff
 
 var rate = 10.0;
@@ -75,10 +88,15 @@ window.onload = function () {
     //load buffer with page
     bufferSwitch(0);
 
+
+
+
     var switcher = document.getElementById("buffsel");
     switcher.addEventListener("input", function () {
         bufferSwitch(switcher.selectedIndex);
     });
+
+
 
     //call slider values
     //     sliderRate = document.getElementById("density").value;
@@ -93,6 +111,8 @@ window.onload = function () {
         sliderDec = document.getElementById("decay").value;
         dec = parseFloat(sliderDec);
     }, 50);
+
+
 
     document.getElementById('startButton').addEventListener('click', function () {
         ctx.resume().then(() => {
@@ -131,7 +151,7 @@ function setup() {
     gcanvas = createCanvas(windowWidth, windowHeight);
     gcanvas.class("grainCanvas");
     gcanvas.parent("canvasContainer");
-  //  buffer = createGraphics(width, height);
+    //  buffer = createGraphics(width, height);
 
     //visual background on canvas
     for (var i = 0; i < windowWidth; i++) {
@@ -180,18 +200,43 @@ function setup() {
     for (var i = 0; i < 5; i++) {
         kmeans();
     }
-
-/*
-    var pointclusters = [];
-
-    for (var i = 0; i < xlist.length; i++){
-        for(j = 0; j < ylist.length; j++){
-
+    /*
+    
+        var pointclusters = [];
+    
+        var xlistsorted = sort(xlist);
+        var ylistsorted = sort(ylist);
+    
+        num_cls = 0;
+    
+        for (var i = 0; i < (xlistsorted.length/10); i++){
+          //  console.log("xlist i "+i);
+            for (var k = 0; k < 10; k++){
+            //    console.log("k "+k);
+                var point_y;
+                for(j = 0; j < points.length; j++){
+              //      console.log("points  "+j);
+                    if(points[j].x == xlistsorted[i]){ // found point of x value
+                //        console.log("points  "+points[j].x);
+                        for(var n = 0 ; n < 10 ; n++){  // check first ten sorted y if point is there
+                            if(points[j].y == ylistsorted[n]){
+                  //              console.log("points  "+points[j].y);
+                                pointclusters[num_cls].push(points[j])
+                    //            console.log( pointclusters[num_clusters]);
+                            } 
+                            else {
+                                break;
+                                console.log("after first break");
+                            }
+    
+                        }
+                        break;
+                    }
+                }
+            }
         }
-    }
-
-*/
-
+        console.log(pointclusters);
+    */
 
     area_map = {};
     num_cluster = 0;
@@ -233,7 +278,7 @@ function setup() {
                 clus.color.b = blue;
                 clus.cluster = num_cluster;
                 area_cluster.push(clus);
-          //         closest.shift();      // clusters are more organic
+                //         closest.shift();      // clusters are more organic
                 centroid_a.color.r = red;
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
@@ -286,20 +331,20 @@ function setup() {
     }
 */
 
-/*
-    for (j = 0; j < num_cluster; j++) {
-        pol = new Polygon();
-        var ar = [];
-        var c = area_map[j];
-    //    console.log(" j " + j);
-    //    console.log(c);
-        for (var i = 0; i < c.length; i++) {
-            ar.push({ x: c[i].point.x, y: c[i].point.y });
+    /*
+        for (j = 0; j < num_cluster; j++) {
+            pol = new Polygon();
+            var ar = [];
+            var c = area_map[j];
+        //    console.log(" j " + j);
+        //    console.log(c);
+            for (var i = 0; i < c.length; i++) {
+                ar.push({ x: c[i].point.x, y: c[i].point.y });
+            }
+            pol.ar = ar;
+            pol.draw();
         }
-        pol.ar = ar;
-        pol.draw();
-    }
-    */
+        */
     /*
         for(var r = 0; r < num_cluster ; r++){
             var cl = area_map[r];
@@ -499,32 +544,32 @@ function draw() {
         }
     */
 
-/*
-
-    // draw centroids
-    for (var i = 0; i < centroids.length; i++) {
-        centroids[i].draw();
-    }
-*/
+    /*
+    
+        // draw centroids
+        for (var i = 0; i < centroids.length; i++) {
+            centroids[i].draw();
+        }
+    */
 
 
     //    noFill();
     //     strokeWeight(14);
 
-
-    for (j = 0; j < num_cluster; j++) {
-        pol = new Polygon();
-        var ar = [];
-        var c = area_map[j];
-    //    console.log(" j " + j);
-    //    console.log(c);
-        for (var i = 0; i < c.length; i++) {
-            ar.push({ x: c[i].point.x, y: c[i].point.y });
+    /*
+        for (j = 0; j < num_cluster; j++) {
+            pol = new Polygon();
+            var ar = [];
+            var c = area_map[j];
+        //    console.log(" j " + j);
+        //    console.log(c);
+            for (var i = 0; i < c.length; i++) {
+                ar.push({ x: c[i].point.x, y: c[i].point.y });
+            }
+            pol.ar = ar;
+            pol.draw();
         }
-        pol.ar = ar;
-        pol.draw();
-    }
-
+    */
     /*
     for (j = 0; j < num_cluster; j++) {
         pol = new Polygon();
@@ -549,7 +594,7 @@ function draw() {
       */
 
     //limit drawing to within canvas
-    if (posX > 0 && posX < windowWidth && posY > windowHeight * 0.0005 && posY < windowHeight) {
+    if (posX > 0 && posX < (windowWidth) && posY > windowHeight * 0.0005 && posY < windowHeight) {
         if (mouseIsPressed) {
 
             var map = {};
@@ -572,16 +617,11 @@ function draw() {
 
 
 
-
             var sorted_map = {};
 
 
             var closest = sort(distances);
-            /*
-            for (i = 0; i < closest.length; i++) {
-                console.log(closest[i] + " " + map[closest[i]]);
-            }
-*/
+
 
             var clus_map = {};
             var vals = [];
@@ -599,7 +639,7 @@ function draw() {
                 cur_cl.color.b = 0;
                 */
                 cur_cl.draw();
-       //         grains(posX, posY);
+                //         grains(posX, posY);
                 /*
                 cur_cl.color.r = r;
                 cur_cl.color.g = g;
@@ -613,13 +653,13 @@ function draw() {
 
             }
             //    console.log(vals);
-         //   console.log(" keys " + uniq(keys));
+            //   console.log(" keys " + uniq(keys));
 
             var num_keys = uniq(keys);
             //    var uniq = [new Set(keys)];
 
             for (var i = 0; i < uniq.length; i++) {
-     //           console.log("key " + keys[i]);
+                //           console.log("key " + keys[i]);
                 vals.push(clus_map[uniq[i]])
             }
 
@@ -628,15 +668,24 @@ function draw() {
                 att = 0.7;
                 dec = 0.7;
                 rate = rand(80, 90);
+
+                console.log("attack " + att + " decay " + dec);
+                PARAMS.attack = att;
+                PARAMS.decay = dec;
+                PARAMS.density = rate;
                 grains(posX, posY);
 
             }
             if (num_keys.length == 2) {
-                //    console.log("num keys 2 "+ uniq.length);
-                att = rand(0.4, 0.5);
-                dec = rand(0.5, 0.6);
-                rate = rand(15, 20);
-              //  grains(posX, posY);
+                att = 0.4;
+                dec = 0.3;
+
+                console.log("attack " + att + " decay " + dec);
+
+                PARAMS.attack = att;
+                PARAMS.decay = dec;
+                PARAMS.density = rate;
+                //  grains(posX, posY);
                 grains(posX, posY);
 
             }
@@ -644,14 +693,20 @@ function draw() {
                 //    console.log("num keys 3 "+ uniq.length);
                 att = 0.01;
                 dec = 0.01;
-                rate = rand(15,30);
+                rate = rand(15, 30);
+                PARAMS.attack = att;
+                PARAMS.decay = dec;
+                PARAMS.density = rate;
                 grains(posX, posY);
-                
+
             } else if (num_keys.length == 4) {
                 //    console.log("num keys 3 "+ uniq.length);
                 att = 0.1;
                 dec = 0.1;
                 rate = 10;
+                PARAMS.attack = att;
+                PARAMS.decay = dec;
+                PARAMS.density = rate;
                 grains(posX, posY);
             }
 
@@ -734,7 +789,7 @@ function draw() {
             }
 */
 
-          // grains(posX, posY);
+            // grains(posX, posY);
 
         }
 
@@ -792,6 +847,7 @@ function draw() {
 
         */
         frate = rate;
+        PARAMS.density = rate;
         frameRate(frate);
     }
 }
@@ -848,7 +904,7 @@ function reshuffle() {
                 clus.color.b = blue;
                 clus.cluster = num_cluster;
                 area_cluster.push(clus);
-               //         closest.shift();      // clusters are more organic
+                //         closest.shift();      // clusters are more organic
                 centroid_a.color.r = red;
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
@@ -973,6 +1029,7 @@ function grains(pos, pitch) {
 
 function bufferSwitch(input) {
     var getSound = new XMLHttpRequest();
+    console.log("in buffer switch " + input);
     if (input == 0) {
         getSound.open("get", "samples/audio/riverwater.wav", true);
     }
@@ -989,6 +1046,7 @@ function bufferSwitch(input) {
     getSound.onload = function () {
         ctx.decodeAudioData(getSound.response, function (buffer) {
             audioBuffer = buffer;
+            console.log(audioBuffer.length);
         });
     };
     getSound.send();

@@ -1,7 +1,231 @@
-//const btnShuffle = document.querySelector("shuffleButton");
+const PARAMS = {
+  source: 0, //sample file number in GUI drop down list
+  attack: 0.7, //in seconds
+  decay: 0.7, //in seconds
+  density : 30,
+ // density: 500, // detuning in cents, 100 cent = 1 semitone
+  delay: 0,
+  attack1: 0.7,
+  decay1: 0.7,
+  density1: 80,
+  attack2 : 0.4,
+  decay2 : 0.4,
+  density2 : 25,
+  attack3 : 0.01,
+  decay3 : 0.01,
+  density3 : 15,
+  attack4: 0.1,
+  decay4: 0.1,
+  density4: 10
+};
 
-//var reshuffleBtn = document.getElementById("shuffleButton");
 
+const pane = new Tweakpane({
+  title: 'Granular Synthesis',
+  expanded: true,
+});
+
+pane.addSeparator();
+
+
+const snd = pane.addFolder({
+  title: 'Sound',
+});
+
+// sound/tone context on and off
+const btnSound = snd.addButton({
+  title: '► | ◼︎',
+  label: 'audio active',
+});
+
+playing = false;
+
+btnSound.on('click', () => {
+  if(ctx.state == playing){
+    ctx.suspend().then(() => {
+    });
+
+  }
+  else{
+    ctx.resume().then(() => {
+    });
+  }}
+  )
+
+
+
+const SourceInput =
+  pane.addInput(PARAMS, 'source', { options: { birdsnearwater: 0, dryleaves: 1, riverwater: 2 } });
+SourceInput.on('change', function (ev) {
+  console.log(ev.value);
+  if (ev.value == 0) {
+   bufferSwitch(0);
+  }
+  if (ev.value == 1) {
+   bufferSwitch(1);
+  }
+  if (ev.value == 2) {
+   bufferSwitch(2);
+  }
+});
+
+
+const instr = pane.addFolder({
+  title: 'Canvas',
+});
+
+// sound/tone context on and off
+const btnReshuffle = instr.addButton({
+  title: 'reshuffle',
+  label: 'reshuffle',
+});
+
+
+btnReshuffle.on('click', () => {
+  reshuffle();
+});
+
+
+
+/*
+
+const attInput = area.addInput(PARAMS, 'attack', { min: 0.01, max: 1.0, step: 0.01 });
+attInput.on('change', function (ev) {
+    att = parseFloat(ev.value.toFixed(2));
+});
+
+const decInput = area.addInput(PARAMS, 'decay', { min: 0.01, max: 1.0, step: 0.01 });
+decInput.on('change', function (ev) {
+    dec = parseFloat(ev.value.toFixed(2));
+});
+
+const densInput = area.addInput(PARAMS, 'density', { min: 1, max: 100, step: 1 });
+densInput.on('change', function (ev) {
+    density = parseInt(ev.value);
+});
+
+*/
+
+/*
+pane.addSeparator();
+
+
+
+const area1 = pane.addFolder({
+    title: '1 cluster area',
+    expanded: true
+});
+
+
+const attInput1 = area1.addInput(PARAMS, 'attack1', { min: 0.01, max: 1.0, step: 0.01 });
+attInput1.on('change', function (ev) {
+    att1 = parseFloat(ev.value.toFixed(2));
+});
+
+const decInput1 = area1.addInput(PARAMS, 'decay1', { min: 0.01, max: 1.0, step: 0.01 });
+decInput1.on('change', function (ev) {
+    dec1 = parseFloat(ev.value.toFixed(2));
+});
+
+const densInput1 = area1.addInput(PARAMS, 'density1', { min: 1, max: 100, step: 1 });
+densInput1.on('change', function (ev) {
+    density1 = parseInt(ev.value);
+});
+
+pane.addSeparator();
+
+
+
+const area2 = pane.addFolder({
+  title: '2 cluster area',
+  expanded: true
+});
+
+
+const attInput2 = area2.addInput(PARAMS, 'attack2', { min: 0.01, max: 1.0, step: 0.01 });
+attInput2.on('change', function (ev) {
+  att2 = parseFloat(ev.value.toFixed(2));
+});
+
+const decInput2 = area2.addInput(PARAMS, 'decay2', { min: 0.01, max: 1.0, step: 0.01 });
+decInput2.on('change', function (ev) {
+  dec2 = parseFloat(ev.value.toFixed(2));
+});
+
+const densInput2 = area2.addInput(PARAMS, 'density2', { min: 1, max: 100, step: 1 });
+densInput2.on('change', function (ev) {
+  density2 = parseInt(ev.value);
+});
+
+
+pane.addSeparator();
+
+
+
+const area3 = pane.addFolder({
+  title: '3 cluster area',
+  expanded: true
+});
+
+
+const attInput3 = area3.addInput(PARAMS, 'attack3', { min: 0.01, max: 1.0, step: 0.01 });
+attInput3.on('change', function (ev) {
+  att3 = parseFloat(ev.value.toFixed(2));
+});
+
+const decInput3 = area3.addInput(PARAMS, 'decay3', { min: 0.01, max: 1.0, step: 0.01 });
+decInput3.on('change', function (ev) {
+  dec3 = parseFloat(ev.value.toFixed(2));
+});
+
+const densInput3 = area3.addInput(PARAMS, 'density3', { min: 1, max: 100, step: 1 });
+densInput3.on('change', function (ev) {
+  density3 = parseInt(ev.value);
+});
+
+
+pane.addSeparator();
+
+
+
+const area4 = pane.addFolder({
+  title: '4 cluster area',
+  expanded: true
+});
+
+
+const attInput4 = area4.addInput(PARAMS, 'attack4', { min: 0.01, max: 1.0, step: 0.01 });
+attInput4.on('change', function (ev) {
+  att4 = parseFloat(ev.value.toFixed(2));
+});
+
+const decInput4 = area4.addInput(PARAMS, 'decay4', { min: 0.01, max: 1.0, step: 0.01 });
+decInput.on('change', function (ev) {
+  dec4 = parseFloat(ev.value.toFixed(2));
+});
+
+const densInput4 = area4.addInput(PARAMS, 'density4', { min: 1, max: 100, step: 1 });
+densInput4.on('change', function (ev) {
+  density4 = parseInt(ev.value);
+});
+*/
+
+const grain = pane.addFolder({
+    title: 'Grain Params',
+    expanded: true
+});
+
+
+
+
+pane.addMonitor(PARAMS,'density',{ view:'graph', min: 1, max: 100});
+pane.addMonitor(PARAMS,'attack',{ view:'graph', min: 0.01, max: 1.0});
+pane.addMonitor(PARAMS,'decay',{ view:'graph', min: 0.01, max: 1.0});
+
+
+
+
+/*
 
 document.getElementById('shuffleButton').addEventListener('click', function () {
   console.log("calling rshuffle");
@@ -9,13 +233,13 @@ document.getElementById('shuffleButton').addEventListener('click', function () {
 });
 
 
-
+*/
 
 
 toggleBtnColorActive = (btnName) => {
-    btnName.style.opacity = "1.0";
-  };
-  
-  toggleBtnColorDeact = (btnName) => {
-    btnName.style.opacity = "0.7";
-  };
+  btnName.style.opacity = "1.0";
+};
+
+toggleBtnColorDeact = (btnName) => {
+  btnName.style.opacity = "0.7";
+};
