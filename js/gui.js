@@ -58,8 +58,18 @@ btnSound.on('click', () => {
   }}
   )
 
+/*
 
+// sound/tone context on and off
+const clearSound = snd.addButton({
+  title: 'clear',
+  label: 'clear',
+});
 
+clearSound.on('click', () => {
+
+})
+*/
 const SourceInput =
   pane.addInput(PARAMS, 'source', { options: { birdsnearwater: 0, dryleaves: 1, riverwater: 2, treebark: 3 } });
 SourceInput.on('change', function (ev) {
@@ -161,7 +171,7 @@ fbInput.on('change', function (ev) {
     fb = parseFloat(ev.value.toFixed(1));
 });
 
-const pInput = effects.addInput(PARAMS, 'pitch', { min: 0.47, max: 2.5, step: 0.01 });
+const pInput = effects.addInput(PARAMS, 'pitch', { min: 0.47, max: 5, step: 0.01 });
 pInput.on('change', function (ev) {
     pitchval = parseFloat(ev.value.toFixed(2));
 });
