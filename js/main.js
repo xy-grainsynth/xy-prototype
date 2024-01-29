@@ -1090,6 +1090,9 @@ function bufferSwitch(input) {
     else if (input == 2) {
         getSound.open("get", "samples/audio/riverwater.wav", true);
     }
+    else if (input == 3) {
+        getSound.open("get", "samples/audio/treebark.wav", true);
+    }
     else {
         //nothing
     }
