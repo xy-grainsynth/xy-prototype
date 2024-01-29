@@ -2,9 +2,11 @@ const PARAMS = {
   source: 0, //sample file number in GUI drop down list
   attack: 0.7, //in seconds
   decay: 0.7, //in seconds
-  density : 30,
+  density : 20,
  // density: 500, // detuning in cents, 100 cent = 1 semitone
-  delay: 0,
+  delay: 0.1,
+  feedback: 0.1,
+  spread: 0,
   attack1: 0.7,
   decay1: 0.7,
   density1: 80,
@@ -18,6 +20,7 @@ const PARAMS = {
   decay4: 0.1,
   density4: 10
 };
+
 
 
 const pane = new Tweakpane({
@@ -38,17 +41,19 @@ const btnSound = snd.addButton({
   label: 'audio active',
 });
 
-playing = false;
+//playing = false;
 
 btnSound.on('click', () => {
-  if(ctx.state == playing){
+  if(ctx.state == "running"){
     ctx.suspend().then(() => {
     });
+    console.log(ctx.state);
 
   }
   else{
     ctx.resume().then(() => {
     });
+    console.log(ctx.state);
   }}
   )
 
@@ -86,17 +91,23 @@ btnReshuffle.on('click', () => {
 });
 
 
+const area = pane.addFolder({
+  title: 'Grain Params',
+  expanded: true
+});
 
-/*
+
 
 const attInput = area.addInput(PARAMS, 'attack', { min: 0.01, max: 1.0, step: 0.01 });
 attInput.on('change', function (ev) {
     att = parseFloat(ev.value.toFixed(2));
+    console.log(" att in gui "+att);
 });
 
 const decInput = area.addInput(PARAMS, 'decay', { min: 0.01, max: 1.0, step: 0.01 });
 decInput.on('change', function (ev) {
     dec = parseFloat(ev.value.toFixed(2));
+    console.log(" dec in gui "+dec);
 });
 
 const densInput = area.addInput(PARAMS, 'density', { min: 1, max: 100, step: 1 });
@@ -104,7 +115,29 @@ densInput.on('change', function (ev) {
     density = parseInt(ev.value);
 });
 
-*/
+
+const sprInput = area.addInput(PARAMS, 'spread', { min: 0, max: 10, step: 1 });
+sprInput.on('change', function (ev) {
+    spread = parseInt(ev.value);
+});
+
+
+const effects = pane.addFolder({
+  title: 'Effekt Params',
+  expanded: true
+});
+
+
+const delInput = effects.addInput(PARAMS, 'delay', { min: 0.0, max: 0.9, step: 0.1 });
+delInput.on('change', function (ev) {
+    del = parseFloat(ev.value.toFixed(1));
+});
+
+
+const fbInput = effects.addInput(PARAMS, 'feedback', { min: 0.0, max: 0.9, step: 0.1 });
+fbInput.on('change', function (ev) {
+    fb = parseFloat(ev.value.toFixed(1));
+});
 
 /*
 pane.addSeparator();

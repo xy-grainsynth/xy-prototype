@@ -5,10 +5,16 @@ var bg = [];
 var dots = []
 
 //grain globals
-var att;
-var dec;
+var att = parseFloat(PARAMS.attack.toFixed(2));
+var dec = parseFloat(PARAMS.decay.toFixed(2));
 var audioBuffer;
-var spread;
+var spread = parseInt(PARAMS.spread);
+var del = parseFloat(PARAMS.delay.toFixed(1));
+var fb = parseFloat(PARAMS.feedback.toFixed(1));
+var density = parseInt(PARAMS.density);
+
+
+var delay = 0;
 
 var att1;
 var att2;
@@ -101,19 +107,19 @@ window.onload = function () {
     //call slider values
     //     sliderRate = document.getElementById("density").value;
     //      rate = parseFloat(sliderRate);
-    setInterval(function () {
-        sliderSpr = document.getElementById("spread").value;
-        spread = parseFloat(sliderSpr);
+ //   setInterval(function () {
+ //       sliderSpr = document.getElementById("spread").value;
+  //      spread = parseFloat(sliderSpr);
         //   sliderRate = document.getElementById("density").value;
         //    rate = parseFloat(sliderRate);
-        sliderAtt = document.getElementById("attack").value;
-        att = parseFloat(sliderAtt);
-        sliderDec = document.getElementById("decay").value;
-        dec = parseFloat(sliderDec);
-    }, 50);
+        //     sliderAtt = document.getElementById("attack").value;
+        //     att = parseFloat(sliderAtt);
+        //     sliderDec = document.getElementById("decay").value;
+        //     dec = parseFloat(sliderDec);
+  //  }, 50);
 
 
-
+/*
     document.getElementById('startButton').addEventListener('click', function () {
         ctx.resume().then(() => {
         });
@@ -123,7 +129,7 @@ window.onload = function () {
         console.log("calling rshuffle");
         reshuffle();
     });
-
+*/
 
 }
 
@@ -665,11 +671,12 @@ function draw() {
 
             if (num_keys.length == 1) {
                 //    console.    console.log();log("num keys 1 "+ uniq.length    console.log(););
-                att = 0.7;
-                dec = 0.7;
-                rate = rand(80, 90);
+                att = parseFloat(att.toFixed(2));
+                dec = parseFloat(dec.toFixed(2));
+                //   rate = rand(80, 90);
+                rate = density;
 
-                console.log("attack " + att + " decay " + dec);
+                console.log("attack " + att + " decay " + dec + " density " + density);
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
                 PARAMS.density = rate;
@@ -677,10 +684,14 @@ function draw() {
 
             }
             if (num_keys.length == 2) {
-                att = 0.4;
-                dec = 0.3;
+                att = parseFloat(att.toFixed(2));
+                dec = parseFloat(dec.toFixed(2));
 
-                console.log("attack " + att + " decay " + dec);
+                rate = density;
+                //    att = 0.4;
+                //    dec = 0.3;
+
+                console.log("attack " + att + " decay " + dec + " density " + density);
 
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
@@ -691,9 +702,16 @@ function draw() {
             }
             else if (num_keys.length == 3) {
                 //    console.log("num keys 3 "+ uniq.length);
-                att = 0.01;
-                dec = 0.01;
-                rate = rand(15, 30);
+                att = parseFloat(att.toFixed(2));
+                dec = parseFloat(dec.toFixed(2));
+                rate = density;
+
+                //          att = 0.01;
+                //          dec = 0.01;
+                //      rate = rand(15, 30);
+
+                console.log("attack " + att + " decay " + dec + " density " + density);
+
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
                 PARAMS.density = rate;
@@ -701,9 +719,17 @@ function draw() {
 
             } else if (num_keys.length == 4) {
                 //    console.log("num keys 3 "+ uniq.length);
-                att = 0.1;
-                dec = 0.1;
-                rate = 10;
+                att = parseFloat(att.toFixed(2));
+                dec = parseFloat(dec.toFixed(2));
+                rate = density;
+
+                //      att = 0.1;
+                //     dec = 0.1;
+
+
+                //    rate = 10;
+
+                console.log("attack " + att + " decay " + dec + " density " + density);
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
                 PARAMS.density = rate;
@@ -980,14 +1006,31 @@ function grains(pos, pitch) {
     var verbLevel = ctx.createGain();
     var len, factor, position, randFactor;
 
+
+    const delay = ctx.createDelay();
+    delay.delayTime.value = del;
+
+    const feedback = ctx.createGain();
+    feedback.gain.value = fb;
+
+
+
+    console.log(" att in grains " + att);
+
     contour.gain.setValueAtTime(0, ctx.currentTime);
     contour.gain.linearRampToValueAtTime(0.5 * rand(0.2, 1), ctx.currentTime + att); // volume ramp is a bit randomized 
     contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (att + dec) + 0.1);
     //contour.gain.linearRampToValueAtTime(0.6 * rand(0.5, 1), ctx.currentTime + grain_x_mapped);
     //contour.gain.linearRampToValueAtTime(0, ctx.currentTime + (grain_x_mapped + grain_y_mapped));
 
+    delay.connect(feedback);
+    feedback.connect(delay);
+    delay.connect(master);
+
+    contour.connect(delay);
     contour.connect(verbLevel);
     contour.connect(master);
+  //  delay.connect(master);
 
     //verbLevel.gain.setValueAtTime(0.6, ctx.currentTime);
     //verbLevel.connect(master);
@@ -1018,6 +1061,7 @@ function grains(pos, pitch) {
     playtime = att + dec;
     randval = rand(0, spread);
     startPos = (len * (pos / position)) + randval;
+ //   console.log(startPos);
     // grain start point = buf len * mouse position / x dimension + rand
     //grain.start(ctx.currentTime, (len * factor / position) + rand(0, randFactor));
     grain.start(ctx.currentTime, startPos);
@@ -1031,13 +1075,13 @@ function bufferSwitch(input) {
     var getSound = new XMLHttpRequest();
     console.log("in buffer switch " + input);
     if (input == 0) {
-        getSound.open("get", "samples/audio/riverwater.wav", true);
+        getSound.open("get", "samples/audio/birdsnearwater.wav", true);
     }
     else if (input == 1) {
-        getSound.open("get", "samples/audio/dryleaveseq.wav", true);
+        getSound.open("get", "samples/audio/dryleaves.wav", true);
     }
     else if (input == 2) {
-        getSound.open("get", "samples/audio/birdsnearwater.wav", true);
+        getSound.open("get", "samples/audio/riverwater.wav", true);
     }
     else {
         //nothing
