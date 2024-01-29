@@ -175,7 +175,7 @@ fbInput.on('change', function (ev) {
     fb = parseFloat(ev.value.toFixed(1));
 });
 
-const pInput = effects.addInput(PARAMS, 'pitch', { min: 0.47, max: 5, step: 0.01 });
+const pInput = effects.addInput(PARAMS, 'pitch', { min: 0.47, max: 10, step: 0.01 });
 pInput.on('change', function (ev) {
     pitchval = parseFloat(ev.value.toFixed(2));
 });
