@@ -13,6 +13,8 @@ var del = parseFloat(PARAMS.delay.toFixed(1));
 var fb = parseFloat(PARAMS.feedback.toFixed(1));
 var density = parseInt(PARAMS.density);
 
+var pitchval = parseFloat(PARAMS.pitch.toFixed(1));
+
 var usepitch = false;
 
 var delay = 0;
@@ -523,7 +525,9 @@ function setup() {
 function draw() {
     //track circle movement
     posX = mouseX;
-    posY = (mouseY * 0.9) - (windowHeight * 0.1);
+  //  posY = (mouseY * 0.9) - (windowHeight * 0.1);
+
+  posY = pitchval;
 
     /*
         var cluster = area_map[0];
@@ -1036,8 +1040,9 @@ function grains(pos, pitch) {
     //verbLevel.gain.setValueAtTime(0.6, ctx.currentTime);
     //verbLevel.connect(master);
 
-
-    var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
+    var gRate = pitch;
+  //  var gRate = (2.5 * (0.8 - (pitch / windowHeight))) + 0.5;
+  //  console.log("gRate " + gRate + " pitch "+ pitch);
     //console.log("posY "+posY + " - pitch/wh "+ pitch/windowHeight + " - reverse pitch val "+0.8 - (pitch/windowHeight) + " -grate " + gRate);
 
     grain.buffer = audioBuffer;
@@ -1048,13 +1053,16 @@ function grains(pos, pitch) {
     randFactor = spread; // smaller randFactor makes larger density, larger randFactor makes density smaller and the sounds more recognizable, its the grain length, spread
 
     //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
-    if(usepitch){
+  //  if(usepitch){
+        grain.playbackRate.value = gRate;
+       /* 
         if (gRate < 1) {
             grain.playbackRate.value = 0.5;
         } else {
             grain.playbackRate.value = gRate;
         }
-    }
+        */
+    
     grain.connect(contour);
 
     playtime = att + dec;

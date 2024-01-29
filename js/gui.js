@@ -7,6 +7,7 @@ const PARAMS = {
   delay: 0.1,
   feedback: 0.1,
   spread: 0,
+  pitch: 1,
   attack1: 0.7,
   decay1: 0.7,
   density1: 80,
@@ -90,7 +91,7 @@ btnReshuffle.on('click', () => {
   reshuffle();
 });
 
-
+/*
 // sound/tone context on and off
 const btnPitch = instr.addButton({
   title: 'pitch',
@@ -107,7 +108,7 @@ btnPitch.on('click', () => {
   }
 });
 
-
+*/
 
 const area = pane.addFolder({
   title: 'Grain Params',
@@ -155,6 +156,11 @@ delInput.on('change', function (ev) {
 const fbInput = effects.addInput(PARAMS, 'feedback', { min: 0.0, max: 0.9, step: 0.1 });
 fbInput.on('change', function (ev) {
     fb = parseFloat(ev.value.toFixed(1));
+});
+
+const pInput = effects.addInput(PARAMS, 'pitch', { min: 0.47, max: 2.5, step: 0.01 });
+pInput.on('change', function (ev) {
+    pitchval = parseFloat(ev.value.toFixed(2));
 });
 
 /*
