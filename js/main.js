@@ -808,12 +808,12 @@ function draw() {
             */
             //   kmeansCentroids();
 
-            /*
+            
             //draw circle when mouse is pressed
             for (var i = 0; i < dots.length; i++) {
                 dots[i].clicked(mouseX, mouseY, rad, shade);
             }
-*/
+
 
             // grains(posX, posY);
 
