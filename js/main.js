@@ -13,6 +13,7 @@ var del = parseFloat(PARAMS.delay.toFixed(1));
 var fb = parseFloat(PARAMS.feedback.toFixed(1));
 var density = parseInt(PARAMS.density);
 
+var usepitch = false;
 
 var delay = 0;
 
@@ -95,13 +96,13 @@ window.onload = function () {
     bufferSwitch(0);
 
 
-
+/*
 
     var switcher = document.getElementById("buffsel");
     switcher.addEventListener("input", function () {
         bufferSwitch(switcher.selectedIndex);
     });
-
+*/
 
 
     //call slider values
@@ -1047,15 +1048,15 @@ function grains(pos, pitch) {
     randFactor = spread; // smaller randFactor makes larger density, larger randFactor makes density smaller and the sounds more recognizable, its the grain length, spread
 
     //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
-
-    /*
+    console.log(" usepitch "+usepitch);
+    if(usepitch){
+        console.log(" in usepitch ");
         if (gRate < 1) {
             grain.playbackRate.value = 0.5;
         } else {
             grain.playbackRate.value = gRate;
         }
-    
-    */
+    }
     grain.connect(contour);
 
     playtime = att + dec;

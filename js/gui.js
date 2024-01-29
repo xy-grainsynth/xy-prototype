@@ -91,6 +91,24 @@ btnReshuffle.on('click', () => {
 });
 
 
+// sound/tone context on and off
+const btnPitch = instr.addButton({
+  title: 'pitch',
+  label: 'pitch',
+});
+
+
+btnPitch.on('click', () => {
+  if(usepitch){
+    usepitch = false;
+  }
+  else {
+    usepitch = true;
+  }
+});
+
+
+
 const area = pane.addFolder({
   title: 'Grain Params',
   expanded: true
