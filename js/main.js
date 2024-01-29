@@ -1048,9 +1048,7 @@ function grains(pos, pitch) {
     randFactor = spread; // smaller randFactor makes larger density, larger randFactor makes density smaller and the sounds more recognizable, its the grain length, spread
 
     //grainsize = map(pos, 0, windowWidth, 0.01, 1.00);
-    console.log(" usepitch "+usepitch);
     if(usepitch){
-        console.log(" in usepitch ");
         if (gRate < 1) {
             grain.playbackRate.value = 0.5;
         } else {
