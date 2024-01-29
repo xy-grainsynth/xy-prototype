@@ -58,7 +58,6 @@ btnSound.on('click', () => {
   }}
   )
 
-/*
 
 // sound/tone context on and off
 const clearSound = snd.addButton({
@@ -67,9 +66,14 @@ const clearSound = snd.addButton({
 });
 
 clearSound.on('click', () => {
+  ctx.close();
+  ctx = new (window.AudioContext || window.webkitAudioContext);
 
+  //master volume
+  master = ctx.createGain();
+  master.connect(ctx.destination);
 })
-*/
+
 const SourceInput =
   pane.addInput(PARAMS, 'source', { options: { birdsnearwater: 0, dryleaves: 1, riverwater: 2, treebark: 3 } });
 SourceInput.on('change', function (ev) {
