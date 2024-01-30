@@ -80,16 +80,23 @@ var buffer;
 
 var pixel_r_val;
 
-var area_map = {};
+//var area_map = {};
 var num_cluster = 0;
-var clus_colors = [];
+//var clus_colors = [];
 
 
 var pol;
 
 
-var xlist = [];
-var ylist = [];
+//var xlist = [];
+//var ylist = [];
+
+
+
+var clustered_points = [];
+var single_points = [];
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -184,6 +191,8 @@ function preventMotion(event) {
 
 ////////////////////////////////////////////////////////////////////////////
 
+
+
 //p5.js setup
 function setup() {
 
@@ -191,64 +200,225 @@ function setup() {
     gcanvas = createCanvas(windowWidth, windowHeight);
     gcanvas.class("grainCanvas");
     gcanvas.parent("canvasContainer");
-    //  buffer = createGraphics(width, height);
+  
+    console.log("before map");
+    loadmap(2);
+    console.log(" after map");
 
-    //visual background on canvas
-    for (var i = 0; i < windowWidth; i++) {
+    bg = [];
+    for(var i = 0 ; i < points.length; i ++){
         bg.push(new Clouds());
-        bg[i].seed();
-        points.push(new Points());
-        points[i].x = bg[i].x;
-        points[i].y = bg[i].y;
-        xlist.push(bg[i].x);
-        ylist.push(bg[i].y);
-        //points.push = { x: bg[i].x, y: bg[i].y, cluster: -1 };
+        bg[i].x = points[i].x;
+        bg[i].y = points[i].y;
         bg[i].draw();
     }
 
-    // the interaction cloud
-    for (var i = 0; i < 40; i++) {
-        dots.push(new Circles());
-    }
-
-
-    //    var map_x = {};
-    //    var map_y = {};
-
-    //    var x = [];
-    //    var y = [];
-
-    var num_centroids = 220;
-
-    for (var i = 0; i < num_centroids; i++) {
-        centroids.push(new Centroids());
-
-        centroids[i].point.x = random(width);
-        centroids[i].point.y = random(height);
-
-        //     map_x[centroids[i].point.x] = centroids[i];
-
-        //    if (centroids[i].point.x in map_x){ 
-        //     console.log(centroids[i].point.x);
-        //     console.log(map_x[centroids[i].point.x])};
-        //     map_y[centroids[i].point.y] = centroids[i];
-        //       x.push(centroids[i].point.x);
-        //      y.push(centroids[i].point.y);
-    }
-
-    // cluster the cloud centers using k means
-    for (var i = 0; i < 5; i++) {
-        kmeans();
-    }
     /*
+        
+        //visual background on canvas
+        for (var i = 0; i < windowWidth; i++) {
+            bg.push(new Clouds());
+            bg[i].seed();
+            points.push(new Points());
+            points[i].x = bg[i].x;
+            points[i].y = bg[i].y;
+            xlist.push(bg[i].x);
+            //   ylist.push(bg[i].y);
+            //points.push = { x: bg[i].x, y: bg[i].y, cluster: -1 };
+            bg[i].draw();
+        }
+    */
+        // the interaction cloud
+        for (var i = 0; i < 40; i++) {
+            dots.push(new Circles());
+        }
     
+    /*
+        var num_centroids = 220;
+    
+        for (var i = 0; i < num_centroids; i++) {
+            centroids.push(new Centroids());
+    
+            centroids[i].point.x = random(width);
+            centroids[i].point.y = random(height);
+    
+            //     map_x[centroids[i].point.x] = centroids[i];
+    
+            //    if (centroids[i].point.x in map_x){ 
+            //     console.log(centroids[i].point.x);
+            //     console.log(map_x[centroids[i].point.x])};
+            //     map_y[centroids[i].point.y] = centroids[i];
+            //       x.push(centroids[i].point.x);
+            //      y.push(centroids[i].point.y);
+        }
+    
+        // cluster the cloud centers using k means
+        for (var i = 0; i < 5; i++) {
+            kmeans();
+        }
+    
+*/
+/*
+        var points_x_map = new Map();
+        //  var points_y_map = new Map();
+    
+        for (var i = 0; i < points.length; i++) {
+            points_x_map.set(points[i].x, points[i]);
+            //     points_y_map.set(points[i].y, points[i]);
+            if (points_x_map.has(points[i].x)) {
+                //         console.log("map has " + points[i].x + " xlist " + xlist[i]);
+            }
+        }
+    */
+
+    /*
+    clustered_points = [];
+    update_points = [];
+    //dense_centroids = [];
+
+    var centroids2 = centroids;
+    centroids = [];
+    var num_dense_cls = 0;
+
+    for (var i = 0; i < points.length; i++) {
+        console.log("i " + i);
+        //     var ref = points[i];
+        var dense_cluster = [];
+        var red = rand(0, 255);
+        var green = rand(0, 255);
+        var blue = rand(0, 255);
+        console.log("color " + red + green + " blue " + blue);
+        changed = false;
+        for (var j = 1; j < points.length - 1; j++) {
+            //         var distp = points[j];
+            var distance = dist(points[i].x, points[i].y, points[j].x, points[j].y);
+            //   console.log("distance "+ int(distance));
+            if (int(distance) < 22) {
+                if (points[i].x == points[j].x) {
+                    console.log(points[i] + " " + points[j]);
+                } else {
+                    dense_cluster.push(points[j]);
+                    points_x_map.delete(points[j].x); // 
+                    console.log(Object.keys(points).length);
+                }
+            } // else point is too far away
+        }
+        if (dense_cluster.length) {
+            //           console.log("dense cluster "+dense_cluster.length);
+
+            dense_cluster.push(points[i]);
+            var c = new Centroids();
+            c.cluster = num_dense_cls;
+            c.point.x = points[i].x;
+            c.point.y = points[i].y;
+            c.color.r = red;
+            c.color.g = green;
+            c.color.b = blue;
+            centroids.push(c);
+            points_x_map.delete(points[i].x);
+            //         console.log(" point in map");
+        } else {
+            single_points.push(points[i]);
+        }
+        clustered_points.push(dense_cluster);
+        update_points = [];
+        //    console.log(points_x_map);
+
+
+        points_x_map.forEach((x, y) => {
+            update_points.push(x);
+        });
+
+        num_dense_cls++;
+        points = update_points;
+
+    }
+    //      
+
+    console.log("num dense cls " + num_dense_cls);
+    var str1 = "[ ";
+    for (var i = 0; i < clustered_points.length; i++) {
+
+        var cluster = clustered_points[i];
+        if (cluster.length) {
+
+            str1 += " [ ";  // str += i+": [ "
+            for (var j = 0; j < cluster.length; j++) {
+                if (j == (cluster.length - 1)) {
+                    str1 += "{ x: " + cluster[j].x + ", y: " + cluster[j].y + " } ";
+                }
+                else {
+                    str1 += "{ x: " + cluster[j].x + ", y: " + cluster[j].y + " }, ";
+                }
+
+            }
+            if (i == (clustered_points.length - 1)) {
+                str1 += " ] ";
+            } else {
+                str1 += " ],"
+            }
+        }
+    }
+    str1 += " ];"
+
+
+    console.log("########")
+    console.log(str1);
+    console.log("########")
+
+    console.log("num single cls " + single_points.length);
+
+    var str2 = "[ ";
+    for (var i = 0; i < single_points.length; i++) {
+        if (i == (single_points.length - 1)) {
+            str2 += "{ x: " + single_points[i].x + ", y: " + single_points[i].y + " } ";
+        }
+        else {
+            str2 += "{ x: " + single_points[i].x + ", y: " + single_points[i].y + " }, ";
+        }
+
+        //  }
+
+    }
+    str2 += " ];";
+
+
+    console.log("########")
+    console.log(str2);
+    console.log("########")
+
+
+
+    console.log("num dense centroids " + centroids.length);
+
+    var str3 = "[ ";
+    for (var i = 0; i < centroids.length; i++) {
+        if (i == (centroids.length - 1)) {
+            str3 += "{ x: " + centroids[i].point.x + ", y: " + centroids[i].point.y + " } ";
+
+        } else {
+            str3 += "{ x: " + centroids[i].point.x + ", y: " + centroids[i].point.y + " }, ";
+        }
+
+    }
+    str3 += " ];";
+
+
+    console.log("########")
+    console.log(str3);
+    console.log("########")
+
+*/
+
+    /*
+     
         var pointclusters = [];
-    
+     
         var xlistsorted = sort(xlist);
         var ylistsorted = sort(ylist);
-    
+     
         num_cls = 0;
-    
+     
         for (var i = 0; i < (xlistsorted.length/10); i++){
           //  console.log("xlist i "+i);
             for (var k = 0; k < 10; k++){
@@ -268,7 +438,7 @@ function setup() {
                                 break;
                                 console.log("after first break");
                             }
-    
+     
                         }
                         break;
                     }
@@ -277,103 +447,104 @@ function setup() {
         }
         console.log(pointclusters);
     */
-
-    area_map = {};
-    num_cluster = 0;
-    var new_centroids = centroids;
-
-    for (var i = 0; i < new_centroids.length - 1; i++) {
-
-        var centroid_a = new_centroids[i];
-
-        var map = {};
-        var distances = [];
-
-        for (var j = 1; j < new_centroids.length; j++) {
-            var centroid_b = new_centroids[j];
-            var distance = dist(centroid_a.point.x, centroid_a.point.y, centroid_b.point.x, centroid_b.point.y);
-            if (int(distance)) {
-                distances.push(int(distance));
-                map[int(distance)] = centroid_b;
+    /*
+        area_map = {};
+        num_cluster = 0;
+        var new_centroids = centroids;
+    
+        for (var i = 0; i < new_centroids.length - 1; i++) {
+    
+            var centroid_a = new_centroids[i];
+    
+            var map = {};
+            var distances = [];
+    
+            for (var j = 1; j < new_centroids.length; j++) {
+                var centroid_b = new_centroids[j];
+                var distance = dist(centroid_a.point.x, centroid_a.point.y, centroid_b.point.x, centroid_b.point.y);
+                if (int(distance)) {
+                    distances.push(int(distance));
+                    map[int(distance)] = centroid_b;
+                }
             }
-        }
-        var closest = sort(distances); // centroids sorted by distance from centroid a
-
-        new_centroids = [];
-        var area_cluster = [];
-
-
-        var red = rand(0, 255);
-        var green = rand(0, 255);
-        var blue = rand(0, 255);
-        clus_colors.push([red, green, blue]);
-
-        for (var k = 0; k < closest.length; k++) {
-
-            if (closest[k] < 200) { // initial proximity value setting
-
-                var clus = map[closest[k]];
-                clus.color.r = red;
-                clus.color.g = green;
-                clus.color.b = blue;
-                clus.cluster = num_cluster;
-                area_cluster.push(clus);
-                //         closest.shift();      // clusters are more organic
+            var closest = sort(distances); // centroids sorted by distance from centroid a
+    
+            new_centroids = [];
+            var area_cluster = [];
+    
+    
+            var red = rand(0, 255);
+            var green = rand(0, 255);
+            var blue = rand(0, 255);
+            clus_colors.push([red, green, blue]);
+    
+            for (var k = 0; k < closest.length; k++) {
+    
+                if (closest[k] < 200) { // initial proximity value setting
+    
+                    var clus = map[closest[k]];
+                    clus.color.r = red;
+                    clus.color.g = green;
+                    clus.color.b = blue;
+                    clus.cluster = num_cluster;
+                    area_cluster.push(clus);
+                    //         closest.shift();      // clusters are more organic
+                    centroid_a.color.r = red;
+                    centroid_a.color.g = green;
+                    centroid_a.color.b = blue;
+                    centroid_a.cluster = num_cluster;
+                    //        console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
+    
+                    area_cluster.push(centroid_a);
+                    area_map[num_cluster] = area_cluster;
+    
+    
+                    //      console.log("are clusetr num " + num_cluster);
+                    //                console.log(area_cluster);
+    
+                    //           console.log(area_cluster);
+                }
+                else {
+                    new_centroids.push(map[closest[k]]);
+                }
+    
+    
+            }
+    
+            if (area_cluster.length == 0) {
+                //    console.log("centroid a");
+                //    console.log(centroid_a)
                 centroid_a.color.r = red;
                 centroid_a.color.g = green;
                 centroid_a.color.b = blue;
                 centroid_a.cluster = num_cluster;
-                //        console.log("setting cluster " + num_cluster + " " + centroid_a.cluster);
-
                 area_cluster.push(centroid_a);
                 area_map[num_cluster] = area_cluster;
-
-
-                //      console.log("are clusetr num " + num_cluster);
-                //                console.log(area_cluster);
-
-                //           console.log(area_cluster);
             }
-            else {
-                new_centroids.push(map[closest[k]]);
-            }
-
-
+    
+            num_cluster++;
+    
         }
-
-        if (area_cluster.length == 0) {
-            //    console.log("centroid a");
-            //    console.log(centroid_a)
-            centroid_a.color.r = red;
-            centroid_a.color.g = green;
-            centroid_a.color.b = blue;
-            centroid_a.cluster = num_cluster;
-            area_cluster.push(centroid_a);
-            area_map[num_cluster] = area_cluster;
-        }
-
-        num_cluster++;
-
-    }
+        */
 
 
 
 
 
     /*
-
+    
     console.log(area_map);
-
+    
     for (var i = 0; i < clus_colors.length; i++) {
         console.log("i " + i + " " + clus_colors[i]);
     }
-
     
+     
     for (var i = 0; i < num_cluster - 1; i++) {
         console.log(" i " + i);
         console.log(area_map[i]);
     }
-*/
+    */
 
     /*
         for (j = 0; j < num_cluster; j++) {
@@ -406,15 +577,15 @@ function setup() {
     /*
     var x_sorted = sort(x);
     var y_sorted = sort(y);
-    
+     
     var area_map = {};
     //    var distances = [];
     var y_new = y_sorted;
-    
+     
     console.log("x sorted "+ x_sorted);
-    
+     
     console.log("y sorted "+ y_sorted);
-    
+     
     while (x_sorted.length > 0) {
     console.log(" in while ");
     for (var i = 0; i < x_sorted.length; i++) {
@@ -424,7 +595,7 @@ function setup() {
     console.log(centroid_a);
     var map_dist = {};
     var dists = [];
-    
+     
      
     for (j = 0; j < y_sorted.length; j++) {
         
@@ -442,12 +613,12 @@ function setup() {
        // console.log(map_dist);
     }
     var closest_b = sort(dists);
-    
+     
     //console.log("closest "+closest_b.length);
-    
-    
+     
+     
     var area_cluster = [];
-    
+     
     var r = rand(0, 255);
     var g = rand(0, 255);
     var b = rand(0, 255);
@@ -456,7 +627,7 @@ function setup() {
     centroid_a.color.g = g;
     centroid_a.color.b = b;
     area_cluster.push(centroid_a);
-    
+     
     if (closest_b.length > 0) {
         console.log("closest _b ist non zero");
         for (var k = 0; k < 10; k++) {
@@ -467,7 +638,7 @@ function setup() {
             close_centroid.color.g = g;
             close_centroid.color.b = b;
             area_cluster.push(close_centroid);
-    
+     
             closest_b.shift();
         }
         var y_new = [];
@@ -478,9 +649,9 @@ function setup() {
             y_new.push(map_dist[closest_b[k]].point.y);
         }
         y_sorted = sort(y_new);
-    
-    
-    
+     
+     
+     
         console.log (" new y sorted "+ y_sorted);
         
         map_y_new = {};
@@ -498,18 +669,18 @@ function setup() {
         map_y = map_y_new;
         x_sorted = sort(x_new);
         
-    
+     
     }
-    
+     
     console.log(area_cluster);
-    
+     
     area_map[x_sorted[i]] = area_cluster;
-    
-    
+     
+     
      
     }
     }
-    
+     
     */
 
     /*
@@ -573,54 +744,83 @@ function draw() {
         */
 
 
-    loadPixels();
+
 
 
     clear();
 
+    
     //re-draw border post-grid
     for (var i = 0; i < bg.length; i++) {
         bg[i].draw();
     }
 
-    /*
-        // draw points
-        for (var i = 0; i < points.length; i++) {
-            points[i].draw();
-        }
-    */
-
-    /*
     
-        // draw centroids
-        for (var i = 0; i < centroids.length; i++) {
-            centroids[i].draw();
-        }
-    */
 
-    var cl_density = {};
-    for (var i = 0; i < clus_colors.length; i++) {
+    // draw points
+    for (var i = 0; i < points.length; i++) {
+        points[i].draw();
+        //     textSize(10);
+        //   text(parseFloat(points[i].x.toFixed(1)) + ", " + parseFloat(points[i].y.toFixed(1)), parseFloat(points[i].x.toFixed(1)), parseFloat(points[i].y.toFixed(1)))
+    }
 
-        // console.log(area_map[i]);
-        if (area_map[i].length > 10 && area_map[i].length <= 30) {
-            //     console.log("i " + i + " " + clus_colors[i]);
-            // console.log(" length of cluster " + area_map[i].length);
-            dense_clusters.push(area_map[i].cluster);
-            pol = new Polygon();
-            var ar = [];
-            for (var j = 0; j < area_map[i].length; j++) {
-                ar.push({ x: area_map[i][j].point.x, y: area_map[i][j].point.y });
-                area_map[i][j].color.r = red_dense_cl;
-                area_map[i][j].color.g = green_dense_cl;
-                area_map[i][j].color.b = blue_dense_cl;
-                area_map[i][j].draw();
-            }
-            pol.ar = ar;
-            pol.draw();
-        }
+
+    // draw centroids
+    for (var i = 0; i < centroids.length; i++) {
+        centroids[i].color.r = 150;
+        centroids[i].color.g = 150;
+        centroids[i].color.b = 150;
+        centroids[i].draw();
+        textSize(10);
+        text(parseFloat(centroids[i].point.x.toFixed(1)) + ", " + parseFloat(centroids[i].point.y.toFixed(1)), parseFloat(centroids[i].point.x.toFixed(1)) + 10, parseFloat(centroids[i].point.y.toFixed(1)) + 10);
 
     }
 
+
+/*
+    for (var i = 0; i < clustered_points.length; i++) {
+        for (var j = 0; j < clustered_points[i].length; j++) {
+            clustered_points[i][j].draw();
+        }
+    }
+*/
+
+/*
+    for (var i = 0; i < centroids.length; i++) {
+        centroids[i].draw();
+    //    textSize(10);
+        text(parseFloat(centroids[i].point.x.toFixed(1)) + ", " + parseFloat(centroids[i].point.y.toFixed(1)), parseFloat(centroids[i].point.x.toFixed(1)) + 10, parseFloat(centroids[i].point.y.toFixed(1)) + 10);
+
+    }
+*/
+
+    //   image(pg, 0 , 0, 2000, 2000);
+    //   pg.save("/home/bela/pg.png"); 
+
+    /*
+var cl_density = {};
+for (var i = 0; i < clus_colors.length; i++) {
+
+    // console.log(area_map[i]);
+    if (area_map[i].length > 10 && area_map[i].length <= 30) {
+        //     console.log("i " + i + " " + clus_colors[i]);
+        // console.log(" length of cluster " + area_map[i].length);
+        dense_clusters.push(area_map[i].cluster);
+    //    pol = new Polygon();
+    //    var ar = [];
+        for (var j = 0; j < area_map[i].length; j++) {
+    //        ar.push({ x: area_map[i][j].point.x, y: area_map[i][j].point.y });
+            area_map[i][j].color.r = red_dense_cl;
+            area_map[i][j].color.g = green_dense_cl;
+            area_map[i][j].color.b = blue_dense_cl;
+            area_map[i][j].draw();
+        }
+    //    pol.ar = ar;
+    //    pol.draw();
+    }
+
+}
+*/
 
     //    noFill();
     //     strokeWeight(14);
@@ -665,8 +865,7 @@ function draw() {
     //limit drawing to within canvas
     if (posX > 0 && posX < (windowWidth) && posY > windowHeight * 0.0005 && posY < windowHeight) {
         if (mouseIsPressed) {
-
-            var map = {};
+             var map = {};
             var distances = [];
             var centroids_valid = [];
             for (var i = 0; i < centroids.length; i++) {
@@ -691,42 +890,36 @@ function draw() {
 
             var closest = sort(distances);
 
-
+      //
             var clus_map = {};
             var vals = [];
             var keys = [];
             console.log("##################################### " + num_cluster);
             for (var i = 0; i < 7; i++) {
                 var cur_cl = map[closest[i]];
-                //  console.log(cur_cl);
+           //       console.log(cur_cl);
                 /*
                 var r =  cur_cl.color.r;
                 var g =  cur_cl.color.g;
                 var b =  cur_cl.color.b;
+                
                 cur_cl.color.r = 0;
                 cur_cl.color.g = 0;
                 cur_cl.color.b = 0;
                 */
                 cur_cl.draw();
-                //         grains(posX, posY);
+                grains(posX, posY);
                 /*
                 cur_cl.color.r = r;
                 cur_cl.color.g = g;
                 cur_cl.color.b = b;
                 */
                 keys.push(cur_cl.cluster);
-                //     console.log(cur_cl.cluster);
-                //   if(cur_cl.cluster in clus_map){
                 clus_map[cur_cl.cluster] = clus_map[cur_cl.cluster] + 1;
-                //   }
-
-            }
-            //    console.log(vals);
-            //   console.log(" keys " + uniq(keys));
-
+           }
+  
             var num_keys = uniq(keys);  // cluster numbers around the cursor
-            //    var uniq = [new Set(keys)];
-
+  
             for (var i = 0; i < uniq.length; i++) {
                 //           console.log("key " + keys[i]);
                 vals.push(clus_map[uniq[i]]) // how many centroids of which cluster number are around the cursor
@@ -763,35 +956,48 @@ function draw() {
                 */
 
             }
+
+
             if (num_keys.length == 2) {
 
                 // how many closest are from the same cluster and how many are from the densest cluster
                 if (num_keys[0] in dense_clusters && num_keys[1] in dense_clusters) {
-                    console.log("cursor is between two dense clusers " + num_keys[0] + " " + num_keys[1]);
-
-                    //   att = (((att - 0.1)<=0) === 'true') ? att-0.01 : att-0.1;
-                    att = att * 0.7;
-                    dec = dec * 0.7;
-                    rate = rate * (1 / 3);
+                    //        console.log("cursor is between two dense clusers " + num_keys[0] + " " + num_keys[1]);
+                    att = att;
+                    dec = dec;
+                    rate = rate;
                     del = del;
                     fb = fb;
-                    posY = pitchval * 0.1;
-                    console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb + " pitch " + posY);
+                    posY = pitchval;
+                    //   att = (((att - 0.1)<=0) === 'true') ? att-0.01 : att-0.1;
+                    // att = att * 0.7;
+                    // dec = dec * 0.7;
+                    // rate = rate * (1 / 3);
+                    // del = del;
+                    // fb = fb;
+                    // posY = pitchval * 0.1;
+                    //  console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb + " pitch " + posY);
                     grains(posX, posY);
 
                 }
                 else if (num_keys[0] in dense_clusters) {
                     // check how many centroids of dense cluster are around the cursor
                     if (vals[0] >= 4) {
-                        console.log("cursor close to dense cluster " + num_keys[0]);
+                        //            console.log("cursor close to dense cluster " + num_keys[0]);
                         // apply dense cluster sound parameters
-                        att = att * 0.2;
-                        dec = dec * 0.2;
-                        rate = rate * (1 / 10);
+                        //       att = att * 0.2;
+                        //       dec = dec * 0.2;
+                        //       rate = rate * (1 / 10);
+                        //       del = del;
+                        //       fb = fb;
+                        //       posY = pitchval * (1 / 3);
+                        att = att;
+                        dec = dec;
+                        rate = rate;
                         del = del;
                         fb = fb;
-                        posY = pitchval * (1 / 3);
-                        console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb + " pitch " + posY);
+                        posY = pitchval;
+                        //              console.log("attack " + att + " decay " + dec + " density " + rate + " delay " + del + " feedback " + fb + " pitch " + posY);
                         grains(posX, posY);
                     }
                     else {
@@ -807,7 +1013,7 @@ function draw() {
                 }
                 else {
 
-                    console.log("other option");
+                    //            console.log("other option");
                 }
 
 
@@ -818,7 +1024,7 @@ function draw() {
                 //    att = 0.4;
                 //    dec = 0.3;
 
-                console.log("attack " + att + " decay " + dec + " density " + density);
+                //        console.log("attack " + att + " decay " + dec + " density " + density);
 
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
@@ -830,7 +1036,7 @@ function draw() {
             }
             else if (num_keys.length == 3) {
                 //    console.log("num keys 3 "+ uniq.length);
-                console.log("between 3 clusters");
+                //       console.log("between 3 clusters");
                 att = parseFloat(PARAMS.attack.toFixed(2));
                 dec = parseFloat(PARAMS.decay.toFixed(2));
                 spread = parseInt(PARAMS.spread);
@@ -840,15 +1046,15 @@ function draw() {
 
                 pitchval = parseFloat(PARAMS.pitch.toFixed(1));
                 posY = pitchval;
-            //    att = parseFloat(att.toFixed(2));
-            //    dec = parseFloat(dec.toFixed(2));
-            //    rate = density;
+                //    att = parseFloat(att.toFixed(2));
+                //    dec = parseFloat(dec.toFixed(2));
+                //    rate = density;
 
                 //          att = 0.01;
                 //          dec = 0.01;
                 //      rate = rand(15, 30);
 
-                console.log("attack " + att + " decay " + dec + " density " + density);
+                //       console.log("attack " + att + " decay " + dec + " density " + density);
 
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
@@ -867,13 +1073,14 @@ function draw() {
 
                 //    rate = 10;
 
-                console.log("attack " + att + " decay " + dec + " density " + density);
+                //     console.log("attack " + att + " decay " + dec + " density " + density);
                 PARAMS.attack = att;
                 PARAMS.decay = dec;
                 PARAMS.density = rate;
                 grains(posX, posY);
             }
 
+          //  grains(posX, posY);
 
 
             /*
@@ -1022,7 +1229,62 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
+function loadmap(input) {
+    clustered_points = [];
+    points = [];
+    centroids = [];
+    single_points = [];
+    bg = [];
+    if (input == 2) {
+        //  clustered_points = point_clusters3;
+        //  single_points = single_points3;
+        // centroids = dense_centroids3;
+        for (var i = 0; i < point_clusters3.length; i++) {
+            var cl = point_clusters3[i];
+            clustered_points[i] = [];   
+            for (var j = 0; j < cl.length; j++) {
+                var c = new Points();
+                c.x = cl[j].x;
+                c.y = cl[j].y;
+                points.push(c);
+                bg.push(new Clouds());
+                bg[i].x = c.x;
+                bg[i].y = c.y;
+                bg[i].draw();
+                clustered_points[i][j] = c;
+            }
+        }
+        for (var i = 0; i < single_points3.length; i++) {
+            var sg = single_points3[i];
 
+            var sgl = new Points();
+            sgl.x = sg.x;
+            sgl.y = sg.y;
+            points.push(sgl);
+            bg.push(new Clouds());
+            bg[i].x = sgl.x;
+            bg[i].y = sgl.y;
+              bg[i].draw();
+            single_points.push(sgl);
+        }
+        for (var i = 0; i < dense_centroids3.length; i++) {
+            var ctr = new Centroids();
+            ctr.point.x = dense_centroids3[i].x;
+            ctr.point.y = dense_centroids3[i].y;
+            ctr.color.r = 0;
+            ctr.color.g = 0;
+            ctr.color.b = 0;
+            centroids.push(ctr);
+        }
+
+        // centroid clusters predefine manually
+
+        console.log(" num centroids "+ centroids.length);
+        console.log(" num points "+ points.length);
+        console.log(" num single points "+ single_points.length);
+
+    }
+}
 
 function reshuffle() {
     num_cluster = 0;
@@ -1117,6 +1379,14 @@ function Circles() {
         this.y = y + rand(tx, ty);
         fill(color, color, 255, 50);
         ellipse(this.x, this.y, startRad, startRad);
+    }
+}
+
+
+function keyPressed() {
+
+    if (key === 's') {
+
     }
 }
 
@@ -1363,6 +1633,7 @@ function Points() {
     this.x = 0;
     this.y = 0;
     this.cluster = -1;
+    this.color = { r: 250, g: 250, b: 250 };
 
     this.draw = function () {
         noStroke();
@@ -1377,6 +1648,24 @@ function Points() {
 }
 
 
+
+function Points_d() {
+    this.x = 0;
+    this.y = 0;
+    this.cluster = -1;
+    this.color = { r: 250, g: 250, b: 250 };
+
+    this.draw = function () {
+        noStroke();
+        if (this.cluster == -1) {
+            fill(255)
+        } else {
+            var centroid1 = dense_centroids[this.cluster];
+            fill(centroid1.color.r, centroid1.color.g, centroid1.color.b)
+        }
+        ellipse(this.x, this.y, 3, 3);
+    }
+}
 
 
 

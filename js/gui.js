@@ -1,5 +1,6 @@
 const PARAMS = {
   source: 0, //sample file number in GUI drop down list
+  map: 3,
   attack: 0.7, //in seconds
   decay: 0.7, //in seconds
   density : 20,
@@ -95,6 +96,20 @@ SourceInput.on('change', function (ev) {
 
 const instr = pane.addFolder({
   title: 'Canvas',
+});
+
+const mapInput = pane.addInput(PARAMS, 'map', { options: {  map3: 2} });
+mapInput.on('change', function (ev) {
+  console.log(ev.value);
+  if (ev.value == 0) {
+   loadmap(0);
+  }
+  if (ev.value == 1) {
+   loadmap(1);
+  }
+  if (ev.value == 2) {
+   loadmap(2);
+  }
 });
 
 // sound/tone context on and off
