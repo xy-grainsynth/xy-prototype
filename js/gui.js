@@ -1,26 +1,13 @@
 const PARAMS = {
   source: 0, //sample file number in GUI drop down list
   map: 3,
-  attack: 0.7, //in seconds
-  decay: 0.7, //in seconds
-  density : 20,
- // density: 500, // detuning in cents, 100 cent = 1 semitone
+  attack: 0.3, //in seconds
+  decay: 0.3, //in seconds
+  density: 50,
   delay: 0.1,
   feedback: 0.1,
   spread: 0,
-  pitch: 1,
-  attack1: 0.7,
-  decay1: 0.7,
-  density1: 80,
-  attack2 : 0.4,
-  decay2 : 0.4,
-  density2 : 25,
-  attack3 : 0.01,
-  decay3 : 0.01,
-  density3 : 15,
-  attack4: 0.1,
-  decay4: 0.1,
-  density4: 10
+  pitch: 1
 };
 
 
@@ -46,18 +33,19 @@ const btnSound = snd.addButton({
 //playing = false;
 
 btnSound.on('click', () => {
-  if(ctx.state == "running"){
+  if (ctx.state == "running") {
     ctx.suspend().then(() => {
     });
     console.log(ctx.state);
 
   }
-  else{
+  else {
     ctx.resume().then(() => {
     });
     console.log(ctx.state);
-  }}
-  )
+  }
+}
+)
 
 
 // sound/tone context on and off
@@ -80,13 +68,13 @@ const SourceInput =
 SourceInput.on('change', function (ev) {
   console.log(ev.value);
   if (ev.value == 0) {
-   bufferSwitch(0);
+    bufferSwitch(0);
   }
   if (ev.value == 1) {
-   bufferSwitch(1);
+    bufferSwitch(1);
   }
   if (ev.value == 2) {
-   bufferSwitch(2);
+    bufferSwitch(2);
   }
 });
 
@@ -95,17 +83,17 @@ const instr = pane.addFolder({
   title: 'Canvas',
 });
 
-const mapInput = pane.addInput(PARAMS, 'map', { options: {  map3: 2} });
+const mapInput = pane.addInput(PARAMS, 'map', { options: { map3: 2 } });
 mapInput.on('change', function (ev) {
   console.log(ev.value);
   if (ev.value == 0) {
-   loadmap(0);
+    loadmap(0);
   }
   if (ev.value == 1) {
-   loadmap(1);
+    loadmap(1);
   }
   if (ev.value == 2) {
-   loadmap(2);
+    loadmap(2);
   }
 });
 
@@ -148,25 +136,25 @@ const area = pane.addFolder({
 
 const attInput = area.addInput(PARAMS, 'attack', { min: 0.01, max: 1.0, step: 0.01 });
 attInput.on('change', function (ev) {
-    att = parseFloat(ev.value.toFixed(2));
-    console.log(" att in gui "+att);
+  att = parseFloat(ev.value.toFixed(2));
+  console.log(" att in gui " + att);
 });
 
 const decInput = area.addInput(PARAMS, 'decay', { min: 0.01, max: 1.0, step: 0.01 });
 decInput.on('change', function (ev) {
-    dec = parseFloat(ev.value.toFixed(2));
-    console.log(" dec in gui "+dec);
+  dec = parseFloat(ev.value.toFixed(2));
+  console.log(" dec in gui " + dec);
 });
 
 const densInput = area.addInput(PARAMS, 'density', { min: 1, max: 100, step: 1 });
 densInput.on('change', function (ev) {
-    density = parseInt(ev.value);
+  density = parseInt(ev.value);
 });
 
 
 const sprInput = area.addInput(PARAMS, 'spread', { min: 0, max: 10, step: 1 });
 sprInput.on('change', function (ev) {
-    spread = parseInt(ev.value);
+  spread = parseInt(ev.value);
 });
 
 
@@ -178,18 +166,18 @@ const effects = pane.addFolder({
 
 const delInput = effects.addInput(PARAMS, 'delay', { min: 0.0, max: 0.9, step: 0.1 });
 delInput.on('change', function (ev) {
-    del = parseFloat(ev.value.toFixed(1));
+  del = parseFloat(ev.value.toFixed(1));
 });
 
 
 const fbInput = effects.addInput(PARAMS, 'feedback', { min: 0.0, max: 0.9, step: 0.1 });
 fbInput.on('change', function (ev) {
-    fb = parseFloat(ev.value.toFixed(1));
+  fb = parseFloat(ev.value.toFixed(1));
 });
 
 const pInput = effects.addInput(PARAMS, 'pitch', { min: 0.47, max: 10, step: 0.01 });
 pInput.on('change', function (ev) {
-    pitchval = parseFloat(ev.value.toFixed(2));
+  pitchval = parseFloat(ev.value.toFixed(2));
 });
 
 /*
@@ -297,16 +285,16 @@ densInput4.on('change', function (ev) {
 */
 
 const grain = pane.addFolder({
-    title: 'Grain Params',
-    expanded: true
+  title: 'Grain Params',
+  expanded: true
 });
 
 
 
 
-pane.addMonitor(PARAMS,'density',{ view:'graph', min: 1, max: 100});
-pane.addMonitor(PARAMS,'attack',{ view:'graph', min: 0.01, max: 1.0});
-pane.addMonitor(PARAMS,'decay',{ view:'graph', min: 0.01, max: 1.0});
+pane.addMonitor(PARAMS, 'density', { view: 'graph', min: 1, max: 100 });
+pane.addMonitor(PARAMS, 'attack', { view: 'graph', min: 0.01, max: 1.0 });
+pane.addMonitor(PARAMS, 'decay', { view: 'graph', min: 0.01, max: 1.0 });
 
 
 
