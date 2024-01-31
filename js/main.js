@@ -619,8 +619,8 @@ for (var i = 0; i < clus_colors.length; i++) {
                     if (domkey == 'dense') { // probably in the dense cluster or on its border, dense clusters are narrow and dnese, so probably very close to centroid
                         console.log("current att val " + att);
                         var att0 = createVector(att, 0);
-                        var dec0 = createVector(att, 0);
-                        var dens0 = createVector(att, 0);
+                        var dec0 = createVector(dec, 0);
+                        var dens0 = createVector(density, 0);
                         var att1 = createVector(attack_times[domkey], 0);
                         var dec1 = createVector(decay_times[domkey], 0);
                         var dens1 = createVector(density_times[domkey], 0);
@@ -657,8 +657,8 @@ for (var i = 0; i < clus_colors.length; i++) {
                         console.log("current att val " + att);
                         // medium and default/light cluster are less dense, so if first weight is very high probably close to the border of the cluster    
                         var att0 = createVector(att, 0);
-                        var dec0 = createVector(att, 0);
-                        var dens0 = createVector(att, 0);
+                        var dec0 = createVector(dec, 0);
+                        var dens0 = createVector(density, 0);
                         var att1 = createVector(attack_times[domkey], 0);
                         var dec1 = createVector(decay_times[domkey], 0);
                         var dens1 = createVector(density_times[domkey], 0);
@@ -676,8 +676,8 @@ for (var i = 0; i < clus_colors.length; i++) {
                     // if average.... 
                     // average 0.1 ist vielleicht eine light area, average 0.5 eine medium area, 0.7 auch medium, mit cursor zum rand hin
                     var att0 = createVector(att, 0);
-                    var dec0 = createVector(att, 0);
-                    var dens0 = createVector(att, 0);
+                    var dec0 = createVector(dec, 0);
+                    var dens0 = createVector(density, 0);
                     var att1 = createVector(attack_times[domkey], 0);
                     var dec1 = createVector(decay_times[domkey], 0);
                     var dens1 = createVector(density_times[domkey], 0);
@@ -698,8 +698,8 @@ for (var i = 0; i < clus_colors.length; i++) {
             */
             else if(domkey == 'dense' && weights[0] >= 0.8){   // on the dense area path of very close to it
                 var att0 = createVector(att, 0);
-                var dec0 = createVector(att, 0);
-                var dens0 = createVector(att, 0);
+                var dec0 = createVector(dec, 0);
+                var dens0 = createVector(density, 0);
                 var att1 = createVector(attack_times[domkey], 0);
                 var dec1 = createVector(decay_times[domkey], 0);
                 var dens1 = createVector(density_times[domkey], 0);
@@ -714,8 +714,8 @@ for (var i = 0; i < clus_colors.length; i++) {
             }
             else if(domkey == 'medium' && weights[0] >= 0.8){   // close to border or medium cluster
                 var att0 = createVector(att, 0);
-                var dec0 = createVector(att, 0);
-                var dens0 = createVector(att, 0);
+                var dec0 = createVector(dec, 0);
+                var dens0 = createVector(density, 0);
                 var att1 = createVector(attack_times[domkey], 0);
                 var dec1 = createVector(decay_times[domkey], 0);
                 var dens1 = createVector(density_times[domkey], 0);
