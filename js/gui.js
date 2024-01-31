@@ -76,7 +76,7 @@ clearSound.on('click', () => {
 })
 
 const SourceInput =
-  pane.addInput(PARAMS, 'source', { options: { birdsnearwater: 0, dryleaves: 1, riverwater: 2, treebark: 3 } });
+  pane.addInput(PARAMS, 'source', { options: { "birds near water": 0, "river water": 1, "treebark": 2 } });
 SourceInput.on('change', function (ev) {
   console.log(ev.value);
   if (ev.value == 0) {
@@ -88,9 +88,6 @@ SourceInput.on('change', function (ev) {
   if (ev.value == 2) {
    bufferSwitch(2);
   }
-  if (ev.value == 3) {
-    bufferSwitch(3);
-   }
 });
 
 
