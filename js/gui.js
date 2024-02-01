@@ -7,7 +7,8 @@ const PARAMS = {
   delay: 0.1,
   feedback: 0.1,
   spread: 0,
-  pitch: 1
+  pitch: 1,
+  numcentr: 3
 };
 
 
@@ -95,6 +96,13 @@ mapInput.on('change', function (ev) {
   if (ev.value == 2) {
     loadmap(2);
   }
+});
+
+
+const cInput = pane.addInput(PARAMS, 'numcentr', { min: 1, max: 7, step: 1 });
+cInput.on('change', function (ev) {
+  numcentr = parseInt(ev.value);
+  console.log(" att in gui " + num_centroids);
 });
 
 // sound/tone context on and off
